@@ -52,6 +52,7 @@ class JSONReader{
 
 	//Daten über die geöffnete JSON
 	private
+		$filehandler, // fopen handler
 		$data, //JSON Daten Array
 		$filepath, //Vollständiger Dateipfad
 		$datahash, //Hash des JSON-Strings auf dem Dateissystem
@@ -64,10 +65,19 @@ class JSONReader{
 	public function __construct( $filename ){
 		//Dateinamen erstellen
 		$this->filepath = self::$path . $filename . '.json';
+		
+		$isfile = is_file( $this->filepath );
+
+		// file lock
+		$this->filehandler = fopen( $this->filepath, 'c+' );
+		if( !flock( $this->filehandler, LOCK_SH ) ){
+			//Fehler
+			throw new Exception('Unable to lock file!');
+		}
 
 		//Datei öffnen
 		//	vorhnaden?
-		if( is_file( $this->filepath ) ){
+		if( $isfile ){
 			//auslesen
 			$this->data = file_get_contents( $this->filepath );
 		}
@@ -75,28 +85,24 @@ class JSONReader{
 		elseif( is_dir( dirname( $this->filepath ) ) ){
 			//leeres Array
 			$this->data = '[]';
-
-			//Datei anlegen
-			file_put_contents( $this->filepath, $this->data );
 		}
 		else{
 			//Fehler
 			throw new Exception('Unable to find file or folder!');
 		}
-
-		//Datei gefüllt?
-		if( !empty( $this->data ) ){
-			//Hash für später
-			$this->datahash = hash( 'sha512', $this->data );
-			//JSON Parsen
-			$this->data = json_decode( $this->data, true);
-			//Fehler?
-			if( !is_array( $this->data ) ){
-				throw new Exception('Zombiefile!');	
-			}
+		
+		if( empty( $this->data ) ){
+			$this->data = '[]';
 		}
-		else{
-			throw new Exception('Unable to open file!');
+
+		
+		//Hash für später
+		$this->datahash = hash( 'sha512', $this->data );
+		//JSON Parsen
+		$this->data = json_decode( $this->data, true);
+		//Fehler?
+		if( !is_array( $this->data ) ){
+			throw new Exception('Zombiefile!');	
 		}
 
 		//Schreibbar?
@@ -109,6 +115,9 @@ class JSONReader{
 	//schreibe Datei bei Objektzerstörung
 	public function __destruct(){
 		$this->write_content();
+		//unlock and close
+		flock($this->filehandler, LOCK_UN );
+		fclose($this->filehandler);
 	}
 
 	//Datei schreiben
@@ -122,14 +131,16 @@ class JSONReader{
 			//ueberhaupt geändert?
 			//JSON okay?
 			if( $nowhash != $this->datahash && $json !== false ){
-				//schreiben
-				$re = file_put_contents( $this->filepath, $json );
-				//Hash anpassen?
-				if( $re ){
-					$this->datahash = $nowhash;
+				if( flock( $this->filehandler, LOCK_EX ) ){ //exclusive log
+					//schreiben
+					$re = file_put_contents( $this->filepath, $json );
+					//Hash anpassen?
+					if( $re ){
+						$this->datahash = $nowhash;
+					}
+					//Rückgabe
+					return $re;
 				}
-				//Rückgabe
-				return $re;
 			}
 		}
 		return false;
