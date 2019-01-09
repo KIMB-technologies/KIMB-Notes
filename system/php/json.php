@@ -50,6 +50,18 @@ class JSONReader{
 		return self::$path;
 	}
 
+	/**
+	 * Deletes a JSON file. (needs exclusive rights)
+	 */
+	public static function deleteFile( $filename ){
+		$file = self::$path . $filename . '.json';
+		if( !is_file( $file ) && !is_file( $file . '.lock' ) ){
+			return true;
+		}
+		file_put_contents( $file . '.lock', '', LOCK_EX );
+		return (!is_file( $file ) || unlink( $file )) && (!is_file( $file . '.lock' ) || unlink( $file . '.lock' ));
+	}
+
 	//Daten über die geöffnete JSON
 	private
 		$filehandler, // fopen handler
@@ -62,15 +74,16 @@ class JSONReader{
 	//	Liest eine JSON Datei ein bzw. erstelle eine neue.
 	//	Order muss existieren
 	//	$filename => Dateiname (ohne .json, relativ zu self::$path)
-	public function __construct( $filename ){
+	//	$lockex => directly lock the file exclusive
+	public function __construct( $filename, $lockex = false){
 		//Dateinamen erstellen
 		$this->filepath = self::$path . $filename . '.json';
 		
 		$isfile = is_file( $this->filepath );
 
 		// file lock
-		$this->filehandler = fopen( $this->filepath, 'c+' );
-		if( !flock( $this->filehandler, LOCK_SH ) ){
+		$this->filehandler = fopen( $this->filepath . '.lock', 'c+' );
+		if( !flock( $this->filehandler, $lockex ? LOCK_EX : LOCK_SH ) ){
 			//Fehler
 			throw new Exception('Unable to lock file!');
 		}
@@ -85,6 +98,7 @@ class JSONReader{
 		elseif( is_dir( dirname( $this->filepath ) ) ){
 			//leeres Array
 			$this->data = '[]';
+			file_put_contents( $this->filepath, $this->data );
 		}
 		else{
 			//Fehler
@@ -135,13 +149,15 @@ class JSONReader{
 					//schreiben
 					$re = file_put_contents( $this->filepath, $json );
 					//Hash anpassen?
-					if( $re ){
+					if( $re !== false ){
 						$this->datahash = $nowhash;
 					}
 					//Rückgabe
 					return $re;
 				}
+				return false;
 			}
+			return true;
 		}
 		return false;
 	}
@@ -174,7 +190,7 @@ class JSONReader{
 	}
 
 	//Ausgabe des Arrays
-	public function print(){
+	public function output(){
 		//raus
 		print_r( $this->data );
 	}
