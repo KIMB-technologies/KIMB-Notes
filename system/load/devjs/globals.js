@@ -91,6 +91,10 @@ function ajax_request( task, post, callback, errcallback ){
 					console.log( data.error );
 				}
 				else{
+					if( systemOfflineMode ){
+						//remove force reconnect if clicked on errormsg 
+						$("div.global.error.message").unbind('click');
+					}
 					//hier online
 					systemOfflineMode = false;
 					systemOfflineManager.statusChanged( false );
@@ -116,6 +120,17 @@ function ajax_request( task, post, callback, errcallback ){
 	).fail( function() {
 		//globale Fehlermeldung
 		errorMessage('Offlinemodus', false);
+
+		//force reconnect if clicked on errormsg.
+		$("div.global.error.message").click( () => {
+			errorMessage('Neu verbinden ...', false);
+			ajax_request(
+				"login",
+				{ "status" : userinformation.id },
+				() => {},
+				() => { errorMessage('Offlinemodus', false);}
+			);
+		});
 
 		//jetzt offline
 		systemOfflineMode = true;

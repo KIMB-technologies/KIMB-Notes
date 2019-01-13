@@ -73,7 +73,7 @@ function maker(noteid, notename, sharecont, savecallback) {
 				}
 				else{
 					//Offline nicht verfügbar
-					confirmDialog('Die gewäöhlte Notiz ist auf diesem Gerät leider nicht offline verfügbar!',
+					confirmDialog('Die gewählte Notiz ist auf diesem Gerät leider nicht offline verfügbar!',
 						{ "OK" : function (){$(this).dialog("close");} },
 						'Offlinemodus'
 					);
