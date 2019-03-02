@@ -38,6 +38,8 @@ defined("Notestool") or die('No clean Request');
 define('GET', 345635745);
 define('POST', 367567868);
 function check_params( $type, $schema, $diemsg = null ){
+	//erstmal alles ok
+	$return = true;
 
 	//zu überprüfenden Datensatz holen
 	if( $type == GET ){
@@ -86,7 +88,7 @@ function check_params( $type, $schema, $diemsg = null ){
 					//	also Unterarray prüfen!
 					if( is_array( $f_type ) ){
 						//machen
-						if( check_params( $data[$f_name], $f_type, $errormsg ) ){
+						if( check_params( $data[$f_name], $f_type, $diemsg ) ){
 							//okay -> Daten merken
 							$data_checked[$f_name] = $data[$f_name];
 						}

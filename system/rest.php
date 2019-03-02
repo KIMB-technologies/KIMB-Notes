@@ -115,6 +115,8 @@ if( in_array( $task, $tasks ) ){
 		//hier muss UserID nicht gegeben sein!
 		$ok = true;
 	}
+	
+	unset( $userlist );
 
 	//Authentification ok?
 	if( $ok ){
