@@ -92,7 +92,6 @@ function list(){
 		$( "li.noteslist_notesnames" ).tooltip();
 
 		//Liste Design
-		$( "div.noteslist div.listpart div.list ul" ).css({ "list-style-type": "none" });
 		$( "div.noteslist div.listpart div.list ul li.noteslist_notesnames" ).css({ "line-height": "28px" });
 		//Buttons Design
 		$( "span.noteseditbuttons" ).css({ "float" : "right", "cursor" : "pointer" });
@@ -115,6 +114,11 @@ function list(){
 				$("button#notesarchive").css("float", "right");
 				$("div.toolbar").css("line-height", "inherit" );
 			}
+
+			$( "div.noteslist div.listpart div.list ul" ).css({
+				"list-style-type": "none",
+				"padding-left" : $(document).width() < 600 ? 0 : 40
+			});
 		}
 		// hefte resize an
 		if( list_first_load ){
@@ -124,6 +128,7 @@ function list(){
 		}
 		//einmal aufrufen
 		list_resize_ui_helper();
+		setTimeout(list_resize_ui_helper, 1000);
 
 		//Listener
 		//	Open
@@ -133,6 +138,22 @@ function list(){
 			//Notiz zeigen
 			console.log( 'Oeffne: "'+ name + '" ("' + noteid + '")' );
 			maker( noteid, name );
+		});
+
+		$( "div.noteslist div.listpart div.list ul" ).sortable({
+			placeholder: "ui-state-highlight"
+		});
+		$( "div.noteslist div.listpart div.list ul" ).on( 'sortchange', function( event, ui ) {
+			var noteslist = [];
+			var top = $( "div.noteslist div.listpart div.list ul li" ).length;
+			$( "div.noteslist div.listpart div.list ul li" ).each((k, elem) => {
+				console.log(JSON.stringify( noteslist));
+				noteslist.push({
+					'noteid' : $( elem ).attr( "noteid" ),
+					'position' : top--
+				});
+			});
+			console.log(JSON.stringify( noteslist) + '--');
 		});
 
 		if( systemOfflineMode ){
