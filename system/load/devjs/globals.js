@@ -194,3 +194,28 @@ function confirmDialog(cont, buttons, title){
 
 	return changeHTML;
 }
+
+/* Different Design for WebApp (Homescreen-Mode) */
+let isOpenedAsApp = ((("standalone" in window.navigator) && window.navigator.standalone == true) || (window.matchMedia('(display-mode: standalone)').matches));
+function displayAsApp(){
+	$('body').css({
+		background: '#f5f5f5'
+	});
+	$('div.main').css({
+		border: 'none',
+		'box-shadow': 'none'
+	});
+	$('h1').css({
+		'font-size': '1.2em'
+	});
+	$('div.logout button#logout, div.logout span.small, div.footer a').css({
+		display: 'none'
+	});
+	$('div.logout').css({
+		height: '26px',
+		width: '48px',
+		position: 'initial'
+	});
+	$("div.logout").removeClass("box");
+}
+

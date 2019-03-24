@@ -1,6 +1,6 @@
 /*
 BUILD-NOTE:
-> $(function(){loginsys()});
+> $(function(){loginsys();if(isOpenedAsApp){displayAsApp();}});
 >> devjs/cla_offlinemanager.js
 >> devjs/globals.js
 >> devjs/fun_loginsys.js
@@ -74,4 +74,5 @@ requireFiles([
 		domain + "/load/devjs/fun_shareviewer.js"
 	], function(){
 		loginsys();
+		if(isOpenedAsApp){ displayAsApp(); }
 });
