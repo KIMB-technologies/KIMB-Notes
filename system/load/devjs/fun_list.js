@@ -141,22 +141,6 @@ function list(){
 			maker( noteid, name );
 		});
 
-		$( "div.noteslist div.listpart div.list ul" ).sortable({
-			placeholder: "ui-state-highlight"
-		});
-		$( "div.noteslist div.listpart div.list ul" ).on( 'sortchange', function( event, ui ) {
-			var noteslist = [];
-			var top = $( "div.noteslist div.listpart div.list ul li" ).length;
-			$( "div.noteslist div.listpart div.list ul li" ).each((k, elem) => {
-				console.log(JSON.stringify( noteslist));
-				noteslist.push({
-					'noteid' : $( elem ).attr( "noteid" ),
-					'position' : top--
-				});
-			});
-			console.log(JSON.stringify( noteslist) + '--');
-		});
-
 		if( systemOfflineMode ){
 			$( "span.noteseditbuttons" ).addClass("disable");
 		}
