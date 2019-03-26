@@ -178,6 +178,20 @@ div.footer a{
 	color:white;
 }
 
+button[art=star]{
+	color: grey;
+	margin-right: 2px;
+}
+.starrednote button[art=star]{
+	color:goldenrod;
+}
+.starrednote{
+	border-color: goldenrod;
+}
+.starrednote span.notesnames{
+	font-weight: bold;
+}
+
 /* Admin */
 div#authCodeManagerDialog table,
 div#authCodeManagerDialog td,

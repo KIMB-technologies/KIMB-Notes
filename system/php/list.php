@@ -65,7 +65,7 @@ elseif( check_params( POST, array( 'userid' => 'strAZaz09', 'art' => 'strAZaz09'
 		$noteid = preg_replace( '/[^a-z0-9]/', '', $_POST['noteid'] );
 
 		//Task prüfen
-		if( in_array( $art, array( 'del', 'up', 'down' ) ) ){
+		if( in_array( $art, array( 'del', 'up', 'down', 'star' ) ) ){
 			//Notes lesen
 			$notesfile = new JSONReader( 'user/user_'. $userid );
 
@@ -139,6 +139,24 @@ elseif( check_params( POST, array( 'userid' => 'strAZaz09', 'art' => 'strAZaz09'
 				}
 				else{
 					add_error( 'Kann nicht verschieben!' );
+				}
+			}
+			else if( $art == 'star' ){
+				//suchen, nach Noteid
+				$stelle = $notesfile->searchValue( [], $noteid, 'noteid' );
+				//wenn gefunden
+				if( $stelle !== false ){
+					if( !$notesfile->isValue( [$stelle, 'starred'] ) ){
+						$starred = false;
+					}
+					else{
+						$starred = $notesfile->getValue( [$stelle, 'starred'] );
+					}
+					$notesfile->setValue( [$stelle, 'starred'], !$starred );
+					add_output( array( true, 'Note wurde auf starred  == "' . ( !$starred ? 'true' : 'false' ) . '" geandert.' ) );
+				}
+				else{
+					add_error( 'Unknown NoteID' );
 				}
 			}
 			else{

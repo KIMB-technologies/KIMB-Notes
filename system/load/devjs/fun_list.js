@@ -79,10 +79,11 @@ function list(){
 		//	alle durchgehen
 		$.each( notes, function(k,v){
 			//anfügen
-			table += '<li class="noteslist_notesnames box" noteid="' + v.noteid + '"><span class="notesnames">'+ v.name +'</span> <span class="noteseditbuttons">'
+			table += '<li class="noteslist_notesnames box'+ ( v.starred ? ' starrednote' : '') +'" noteid="' + v.noteid + '"><span class="notesnames">'+ v.name +'</span> <span class="noteseditbuttons">'
+				+ '<button art="star" title="Notiz als wichtig markieren">&starf;</button>'
 				+ '<button art="up" title="Nach oben" '+ (k != 0 ? '' : 'disabled="disabled"' ) +'>&uarr;</button>'
 				+ '<button art="down" title="Nach unten" '+ ( notes.length - 1 != k ? '' : 'disabled="disabled"' ) +'>&darr;</button>'
-				+ '<button art="del" title="Notiz archivieren">&#x21bb;</button>'
+				+ '<button art="del" title="Notiz archivieren" '+ ( v.starred ? 'disabled="disabled"' : '' ) +'>&#x21bb;</button>'
 				+ '</span></li>';
 		});
 		table += '</ul>';
@@ -122,13 +123,13 @@ function list(){
 		}
 		// hefte resize an
 		if( list_first_load ){
-			$( window ).resize( list_resize_ui_helper );
+			$( window ).resize( () => setTimeout(list_resize_ui_helper, 200) );
 			//nicht mehr der erste Durchgang
 			list_first_load = false;
 		}
 		//einmal aufrufen
 		list_resize_ui_helper();
-		setTimeout(list_resize_ui_helper, 1000);
+		setTimeout(list_resize_ui_helper, 300);
 
 		//Listener
 		//	Open
