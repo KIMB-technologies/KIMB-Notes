@@ -270,6 +270,10 @@ function maker(noteid, notename, sharecont, savecallback) {
 		markRend.link = function (href, title, text) {
 			return '<a href="' + href + '" title="' + title + '" target="_blank">' + text + '</a>';
 		}
+		// Task List Support
+		markRend.listitem = function(text) {
+			return /^\s*\[[x| ]\]\s*/.test(text) ? '<li style="list-style: none">' + text.replace(/^\s*\[ \]\s*/, '<input type="checkbox" disabled> ').replace(/^\s*\[x\]\s*/, '<input type="checkbox" checked disabled> ') + '</li>' : '<li>' + text + '</li>';
+		};
 
 		//Markdown Parser init.
 		marked.setOptions({

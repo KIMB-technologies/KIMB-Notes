@@ -24,6 +24,7 @@
 		<h1>KIMB-Notes Markdown Übersicht</h1>
 		<ul>
 			<li>&darr; <a href="#allgemein">Allgemein<a></a></li>
+			<li>&darr; <a href="#beispiel">Beispiel<a></a></li>
 			<li>&darr; <a href="#codebloecke">Codeblöcke<a></a></li>
 		</ul>
 
@@ -38,11 +39,84 @@
 				<br />
 				Ein gute Einleitung in die Syntax von Markdown befindet sich <a href="https://guides.github.com/features/mastering-markdown/#syntax" target="_blank">hier</a>.
 				<br/>
-				(Aktuell wird GitHub Flavored Markdown nicht vollständig untersützt, es fehlen: Task Lists, SHA references, Issue references within a repository, 
-				Username @mentions, Emoji - siehe <a href="https://github.com/KIMB-technologies/KIMB-Notes/issues" target="_blank">Issues</a> für geplante Features)
+				GitHub Flavored Markdown nicht vollständig untersützt.
 			</p>
 		</div>
 
+		<div class="box">
+			<h2 id="beispiel">Beispiel</h2>
+				<pre>
+	# Test
+	Und hier dann der Text!!
+
+	### Block
+
+	> Und hier
+	> `auch`!
+
+	| Tabellen |      |
+	|----------|------|
+	| A        | B    |
+	| C        | D    |
+
+	# Listen
+
+	### Ungeordnete Liste
+
+	- [x] eine Aufgabe
+	- [ ] zu erledigen
+	- ~~this~~
+		- **this**
+	- *this*
+	- https://github.com/KIMB-technologies/KIMB-Notes oder auch [Notes](https://github.com/KIMB-technologies/KIMB-Notes)
+
+	### Geordnete Liste
+	1. A
+	2. B
+	3. C
+		1. a
+	2. b
+	3. c
+
+	# Bilder
+
+	![Bild](../notes.png)
+				</pre>
+
+				<h3>Test</h3><p>Und hier dann der Text!!</p>
+				<h5>Block</h5><blockquote>
+				<p>Und hier
+				<code>auch</code>!</p>
+				</blockquote>
+				<table>
+				<thead>
+				<tr>
+				<th>Tabellen</th>
+				<th></th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr>
+				<td>A</td>
+				<td>B</td>
+				</tr>
+				<tr>
+				<td>C</td>
+				<td>D</td>
+				</tr>
+				</tbody>
+				</table>
+				<h3>Listen</h3><h5>Ungeordnete Liste</h5><ul>
+				<li style="list-style: none"><input type="checkbox" checked="" disabled=""> eine Aufgabe</li><li style="list-style: none"><input type="checkbox" disabled=""> zu erledigen</li><li><del>this</del><ul>
+				<li><strong>this</strong></li><li><em>this</em></li></ul>
+				</li><li><a href="https://github.com/KIMB-technologies/KIMB-Notes" title="null" target="_blank">https://github.com/KIMB-technologies/KIMB-Notes</a> oder auch <a href="https://github.com/KIMB-technologies/KIMB-Notes" title="null" target="_blank">Notes</a></li></ul>
+				<h5>Geordnete Liste</h5><ol>
+				<li>A</li><li>B</li><li>C<ol>
+				<li>a</li><li>b</li><li>c</li></ol>
+				</li></ol>
+				<h3>Bilder</h3><p><img src="../notes.png" alt="Bild"></p>
+		</div>
+		
 		<div class="box">
 			<h2 id="codebloecke">Codeblöcke</h2>
 				<pre>
