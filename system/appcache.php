@@ -108,7 +108,12 @@ if( $jsdevmin == 'dev' ){
 echo $domain."/load/notes_bg_sw.png"."\r\n";
 echo $domain."/load/loader.gif"."\r\n";
 echo $domain."/load/markdownsupport.html"."\r\n";
-
+echo $domain."/load/fa/fontawesome.min.css"."\r\n";
+echo $domain."/load/fa/fa-regular-400.svg"."\r\n";
+echo $domain."/load/fa/fa-regular-400.woff"."\r\n";
+echo $domain."/load/fa/fa-regular-400.eot"."\r\n";
+echo $domain."/load/fa/fa-regular-400.ttf"."\r\n";
+echo $domain."/load/fa/fa-regular-400.woff2"."\r\n";
 echo "\r\n";
 echo "NETWORK:"."\r\n";
 echo $domain."/ajax.php"."\r\n";

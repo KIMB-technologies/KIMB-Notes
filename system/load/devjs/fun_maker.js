@@ -270,16 +270,21 @@ function maker(noteid, notename, sharecont, savecallback) {
 		markRend.link = function (href, title, text) {
 			return '<a href="' + href + '" title="' + title + '" target="_blank">' + text + '</a>';
 		}
-		// Task List Support
-		markRend.listitem = function(text) {
-			return /^\s*\[[x| ]\]\s*/.test(text) ? '<li style="list-style: none">' + text.replace(/^\s*\[ \]\s*/, '<input type="checkbox" disabled> ').replace(/^\s*\[x\]\s*/, '<input type="checkbox" checked disabled> ') + '</li>' : '<li>' + text + '</li>';
-		};
+		markRend.text = function(text){
+			text = text.replace( /@(([0-9a-zA-Z]{1,8})[0-9a-zA-Z]*)/g , '<a class="openothernote" noteid="$1">@$2</a>' );
+			return text.replace( /:(\S+):/g, '<i class="far fa-$1"></i>' );
+		}
+		markRend.checkbox = function(checked){
+			return checked ? '<i class="far fa-check-square"></i> ' : '<i class="far fa-square"></i> ';
+		}
 
 		//Markdown Parser init.
 		marked.setOptions({
 			renderer: markRend,
 			gfm: true,
 			tables: true,
+			smartLists: true,
+			smartypants: true,
 			highlight: function (code, lang) {
 				//Languages Prism supports
 				var prismlanguages = ['markup', 'css', 'clike', 'javascript', 'c', 'bash', 'cpp', 'csharp', 'ruby', 'git', 'ini', 'java', 'json', 'lua', 'markdown', 'matlab', 'objectivec', 'perl', 'php', 'python', 'r', 'sql', 'swift'];
@@ -325,6 +330,14 @@ function maker(noteid, notename, sharecont, savecallback) {
 			}
 
 			$("div#notespreview").html(marked(cm_editor.getValue()));
+
+			$(".openothernote").unbind('click').click( function(){
+				var id = $(this).attr('noteid');
+				ajaxsave( function (){
+					removeCodeMirrorListeners();
+					maker( id, '' );
+				});
+			});
 		}
 		//	einmal zu Beginn
 		reparse();

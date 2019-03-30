@@ -25,6 +25,7 @@
 		<ul>
 			<li>&darr; <a href="#allgemein">Allgemein<a></a></li>
 			<li>&darr; <a href="#beispiel">Beispiel<a></a></li>
+			<li>&darr; <a href="#sonder">Sonderfeatures<a></a></li>
 			<li>&darr; <a href="#codebloecke">Codeblöcke<a></a></li>
 		</ul>
 
@@ -39,7 +40,7 @@
 				<br />
 				Ein gute Einleitung in die Syntax von Markdown befindet sich <a href="https://guides.github.com/features/mastering-markdown/#syntax" target="_blank">hier</a>.
 				<br/>
-				GitHub Flavored Markdown nicht vollständig untersützt.
+				GitHub Flavored Markdown wird nicht vollständig untersützt.
 			</p>
 		</div>
 
@@ -117,6 +118,30 @@
 				<h3>Bilder</h3><p><img src="../notes.png" alt="Bild"></p>
 		</div>
 		
+		<div class="box">
+			<h2 id="sonder">Sonderfeatures</h2>
+			
+			<h3>FontAwesome</h3>
+
+				<p>Mittels <code>:faclass:</code> können Symbole aus FontAwesome angezeigt werden,
+				<code>:grin:</code> zeigt z.B. einen fröhlichen Smiley.</p>
+
+				<p><a href="https://fontawesome.com/icons?d=gallery&s=regular&m=free" target="_blank">FontAnwesome Symbole</a></p>
+				
+			<h3>Notizreferenzen</h3>
+					
+				<p>Mittels <code>@noteid</code> können können Notizen untereinder verlinkt werden.
+				So wird mit <code>@0bdd4aef0824abb4ff3f49dbd2ad7efc3e2545daa5afaf23b4cf6c0cb9a70d3b3e10a03ae84172d4f7f2e9dc46c662529783</code> z.B. ein Link zur Notiz
+				0bdd4aef0824abb4ff3f49dbd2ad7efc3e2545daa5afaf23b4cf6c0cb9a70d3b3e10a03ae84172d4f7f2e9dc46c662529783 erstellt.
+				</p>
+				<p><em>
+					Achtung, die NotizID wird nicht geprüft, sollte diese nicht vorhanden sein,
+					so landet man in einer leeren und nicht speicherbaren Notiz.
+				</em>
+				</p>
+
+		</div>
+
 		<div class="box">
 			<h2 id="codebloecke">Codeblöcke</h2>
 				<pre>
