@@ -2,6 +2,7 @@
 BUILD-NOTE:
 > $(function(){loginsys();if(isOpenedAsApp){displayAsApp();}});
 >> devjs/cla_offlinemanager.js
+>> devjs/cla_enc.js
 >> devjs/globals.js
 >> devjs/fun_loginsys.js
 >> devjs/fun_list.js
@@ -65,6 +66,7 @@ var requireFiles = function () {
 
 requireFiles([
 		domain + "/load/devjs/cla_offlinemanager.js",
+		domain + "/load/devjs/cla_enc.js",
 		domain + "/load/devjs/globals.js",
 		domain + "/load/devjs/fun_loginsys.js",
 		domain + "/load/devjs/fun_list.js",

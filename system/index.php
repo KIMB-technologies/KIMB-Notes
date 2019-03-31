@@ -185,6 +185,8 @@ $manifest = SystemInit::get( 'AppCache' ) ? ' manifest="'.$domain.'/appcache.php
 				<div class="toolbar">
 					<input type="text" id="newnotename" placeholder="Notizname">
 					<button id="newnote">Neu</button>
+					<span class="ui-icon ui-icon-color-333 ui-icon-unlocked encrypt-note" title="Notiz wird nicht verschlüsselt."></span>
+					<span class="ui-icon ui-icon-color-333 ui-icon-locked encrypt-note disable" title="Notiz wird verschlüsselt."></span>
 					<button id="notesarchive">Notizarchiv</button>
 				</div>
 

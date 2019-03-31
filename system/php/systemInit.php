@@ -62,7 +62,7 @@ abstract class SystemInit{
 
 	//Sytemversion
 	//	[ Hauptversionsnummer, Unternummer, Patch, Zusatz (Alpha, Beta, Final) ] => [1, 23, 5, 'B'] -> 1.23.5 Beta
-	const SYSTEMVERSION = [ 1, 1, 2, 'Final' ];
+	const SYSTEMVERSION = [ 1, 1, 3, 'Beta' ];
 
 	/*
 		Auslesen der Konfiguration

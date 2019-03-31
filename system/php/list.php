@@ -187,7 +187,7 @@ elseif( check_params( POST, array( 'userid' => 'strAZaz09', 'art' => 'strAZaz09'
 	}
 }
 //Neu
-elseif( check_params( POST, array( 'userid' => 'strAZaz09', 'name' => 'strALL') ) ){
+elseif( check_params( POST, array( 'userid' => 'strAZaz09', 'name' => 'strALL', '*enc' => 'strAZaz09' ) ) ){
 	//Userid
 	//	=> Konvention nur kleine Buchstaben!
 	$userid = preg_replace( '/[^a-z]/', '', $_POST['userid'] );
@@ -219,7 +219,8 @@ elseif( check_params( POST, array( 'userid' => 'strAZaz09', 'name' => 'strALL') 
 		$notesfile->setValue( [null], array(
 			'name' => $_POST['name'],
 			'noteid' => $newid,
-			'position' => $pos + 1
+			'position' => $pos + 1,
+			'enc' => !empty($_POST['enc']) && $_POST['enc'] === 'true'
 		));
 
 		//Okay Ausgabe

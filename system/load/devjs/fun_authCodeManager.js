@@ -59,7 +59,9 @@ function authCodeManager(){
 			+'<input class="newPassword" type="password" id="newPasswordB" placeholder="Neues Passwort"> <span class="newPasswordIndikator" id="newPasswordBIndikator">Bitte geben Sie das Passwort ein!</span><br />'
 			+'<button id="newPasswordSet">Ändern</button>'
 			+'<div id="newPasswordDone" class="disable"></div>';
-
+		html += '<h3>Passwort zur Verschlüsselung von Notizen</h3>'
+			+'<input class="noteEncPassw" type="password" id="noteEncPassw" placeholder="Passwort" value="'+ (systemEncrypter.data.status ? '*******' : '') +'"> <span>Bitte geben Sie ein Passwort zur Verschlüsselung der Notizen ein!</span><br />'
+			+'<button id="noteEncPasswSet" disabled>Ändern</button>';
 		dialogSetContent( html );
 
 		//Passwort Button aus
@@ -129,6 +131,13 @@ function authCodeManager(){
 			else{
 				$( "button#newPasswordSet" ).prop('disabled', true);
 			}
+		});
+		$( "input.noteEncPassw" ).on( 'keyup', function (){
+			$( "button#noteEncPasswSet" ).prop('disabled', $( "input.noteEncPassw" ).val().length < 4);
+		});
+		$("button#noteEncPasswSet").click( function(){
+			systemEncrypter.setNotesPassword( $( "input.noteEncPassw" ).val() );
+			$( "button#noteEncPasswSet" ).prop('disabled', true);
 		});
 
 		//Löschen von Authcodes

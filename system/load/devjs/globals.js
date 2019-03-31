@@ -8,6 +8,9 @@ var errorMessageTimeOut = null;
 var systemOfflineMode = false;
 var systemOfflineManager = new OfflineManager();
 
+//Notizen verschluesseln
+var systemEncrypter = new NotesEncrypter();
+
 //REST oder Session API?
 var systemRESTAPI = false;
 

@@ -9,7 +9,7 @@ function list(){
 	//Eine bestimmte Notiz zuletzt geöffnet, dann zu dieser zurückkehren
 	if( localStorage.getItem( "note_maker_reopen" ) != null && localStorage.getItem( "note_maker_reopen" ) != 'none' ){
 		var lastopend = JSON.parse( localStorage.getItem( "note_maker_reopen" ) );
-		maker( lastopend.noteid, lastopend.name );
+		maker( lastopend.noteid, lastopend.name, void 0, void 0, lastopend.enc );
 	}
 	
 
@@ -79,7 +79,9 @@ function list(){
 		//	alle durchgehen
 		$.each( notes, function(k,v){
 			//anfügen
-			table += '<li class="noteslist_notesnames box'+ ( v.starred ? ' starrednote' : '') +'" noteid="' + v.noteid + '"><span class="notesnames">'+ v.name +'</span> <span class="noteseditbuttons">'
+			table += '<li class="noteslist_notesnames box'+ ( v.starred ? ' starrednote' : '') +'" noteid="' + v.noteid + '" enc="'+ ( v.enc ? 'true' : 'false' ) +'"><span class="notesnames">' + v.name
+				+ ( v.enc ? '<span class="ui-icon ui-icon-color-333 ui-icon-locked" title="Verschlüsselte Notiz."></span>' : '' )
+				+ '</span> <span class="noteseditbuttons">'
 				+ '<button art="star" title="Notiz als wichtig markieren">&starf;</button>'
 				+ '<button art="up" title="Nach oben" '+ (k != 0 ? '' : 'disabled="disabled"' ) +'>&uarr;</button>'
 				+ '<button art="down" title="Nach unten" '+ ( notes.length - 1 != k ? '' : 'disabled="disabled"' ) +'>&darr;</button>'
@@ -136,9 +138,16 @@ function list(){
 		$( "div.noteslist div.listpart div.list ul li span.notesnames" ).off('click').click(function(){
 			var noteid = $( this ).parent().attr( "noteid" );
 			var name = $( this ).text();
+			var enc = $( this ).parent().attr( "enc" ) === 'true';
 			//Notiz zeigen
 			console.log( 'Oeffne: "'+ name + '" ("' + noteid + '")' );
-			maker( noteid, name );
+			if(enc){
+				systemEncrypter.requestForPassword();
+				if( !systemEncrypter.data.status ){
+					return;
+				}
+			}
+			maker( noteid, name, void 0, void 0, enc );
 		});
 
 		if( systemOfflineMode ){
@@ -168,9 +177,13 @@ function list(){
 				);
 			});
 		}
-		
-
-
+		$("div.noteslist div.toolbar span.encrypt-note").off('click').click(function(){
+			$("div.noteslist div.toolbar span.encrypt-note").toggleClass( 'disable' );
+			if( !$("div.noteslist div.toolbar span.encrypt-note.ui-icon-locked").hasClass( 'disable' ) ){
+				systemEncrypter.requestForPassword();
+			}
+		});
+		$("div.noteslist div.toolbar span.encrypt-note").tooltip();
 	}
 
 	//Neue Notiz
@@ -179,7 +192,7 @@ function list(){
 		$( "div.noteslist div.listpart div.loading" ).removeClass( "disable" );
 
 		ajax_request( "list",
-	 		{"userid" : userinformation.id, "name" : name },
+	 		{"userid" : userinformation.id, "name" : name, "enc" : !$("div.noteslist div.toolbar span.encrypt-note.ui-icon-locked").hasClass( 'disable' ) },
 			function ( data ) {
 				$( "div.noteslist div.listpart div.loading" ).addClass( "disable" );
 				if( data.status === 'okay' ){

@@ -234,3 +234,7 @@ div#freigabeManagerDialog tr {
 	font-family: Ubuntu, sans-serif;
 	font-size: 1em;
 }
+
+.ui-icon-color-333{
+	background-image: url(js-libs/images/ui-icons_333_256x240.png);
+}

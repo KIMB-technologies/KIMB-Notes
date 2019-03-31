@@ -1,9 +1,17 @@
 var cm_editor;
 
 //Notesmaker
-function maker(noteid, notename, sharecont, savecallback) {
+function maker(noteid, notename, sharecont, savecallback, encrypted) {
 	//sharecont enthält Freigabeinhalt, wenn Freigabe geladen werden soll
 	//savecallback ist Funktion um veränderungen des Shares zu speichern
+	//encrypted gibt an, eine verschluesselte Dateie zu oeffnen
+
+	if( typeof encrypted === "undefined" || encrypted !== true ){
+		encrypted = false;
+	}
+	if(encrypted){
+		$("button#publishnote").prop('disabled', true);
+	}
 
 	//	Erstelle zwei Variablen, die Zustand darstellen
 	if (typeof sharecont === "undefined") {
@@ -11,7 +19,7 @@ function maker(noteid, notename, sharecont, savecallback) {
 		var shareeditable = false;
 
 		//diese Notiz als geöffnete speichern
-		localStorage.setItem("note_maker_reopen", JSON.stringify({ noteid: noteid, name: notename }));
+		localStorage.setItem("note_maker_reopen", JSON.stringify({ noteid: noteid, name: notename, enc: encrypted }));
 	}
 	else {
 		if (typeof savecallback === "function") {
@@ -114,11 +122,23 @@ function maker(noteid, notename, sharecont, savecallback) {
 						//neue Notiz (dann Server noch leer)
 						if (!data.data.empty) {
 
+							var cont = data.data.content;
+							if( encrypted ){
+								try {
+									cont = systemEncrypter.decryptNote( data.data.content );
+								} catch (error) {
+									localStorage.setItem("note_maker_reopen", 'none');
+									removeCodeMirrorListeners();
+									list();
+									setTimeout( () => { errorMessage('Kann Notiz nicht entschlüsseln!', 10); }, 200 );
+								}
+							}
+
 							//Daten übernehmen
 							notedata = {
 								"name": data.data.name,
 								"id": data.data.id,
-								"content": data.data.content,
+								"content": cont,
 								"lastserverchanged": data.data.geandert
 							};
 
@@ -141,12 +161,13 @@ function maker(noteid, notename, sharecont, savecallback) {
 	}
 
 	function removeCodeMirrorListeners(){
-		//die EventListener weg machen
-		//	Parser
-		cm_editor.off("change", here_parser_reparse);
-		//	Speicherung
-		cm_editor.off("change", here_codemi_save);
-
+		if( typeof cm_editor === "object" ){
+			//die EventListener weg machen
+			//	Parser
+			cm_editor.off("change", here_parser_reparse);
+			//	Speicherung
+			cm_editor.off("change", here_codemi_save);
+		}
 		//keine Notiz mehr geöffnet
 		newerNoteOnServerFound = function (){};
 	}
@@ -466,8 +487,12 @@ function maker(noteid, notename, sharecont, savecallback) {
 					}
 					else{
 						$("div.noteview div.loading").removeClass("disable");
+						var cont = cm_editor.getValue();
+						if(encrypted){
+							cont = systemEncrypter.encryptNote(cont);
+						}
 						ajax_request("view",
-							{ "userid": userinformation.id, "noteid": noteid, "note": { "name": $("input#notename").val(), "cont": cm_editor.getValue() } },
+							{ "userid": userinformation.id, "noteid": noteid, "note": { "name": $("input#notename").val(), "cont": cont } },
 							function (data) {
 								$("div.noteview div.loading").addClass("disable");
 								if (
@@ -679,7 +704,7 @@ function maker(noteid, notename, sharecont, savecallback) {
 					//Dialog Inhalt bauen
 					var html = '<table><tr><th>Änderungen</th><th>Zeitpunkt</th></tr>';
 					$.each(data.data, function (k, v) {
-						html += '<tr><td>' + v.diff + '</td>';
+						html += '<tr><td>' + ( encrypted ? 'Kein Diff. bei verschlüsselten Notizen!' : v.diff ) + '</td>';
 						html += '<td>' + v.time + '<button key="' + k + '" class="takeInputFromHistory">Zurückkehren</button></td></tr>'
 					});
 					html += '</table>';
