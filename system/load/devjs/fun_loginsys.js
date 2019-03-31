@@ -219,9 +219,9 @@ function loginsys(){
 
 			//Listener
 			//	Klick
-			$( "button#userlogin" ).unbind("click").click( try_login );
+			$( "button#userlogin" ).off("click").click( try_login );
 			//	Enter
-			$( "input#userpassword" ).unbind("keyup").keyup( function( event ) {
+			$( "input#userpassword" ).off("keyup").keyup( function( event ) {
 				if(event.keyCode == 13){
 					try_login();
 				}
@@ -285,7 +285,7 @@ function loginsys(){
 		function display_and_listen(){
 			$( "div.logout" ).removeClass( "disable" );
 
-			$( "button#logout" ).unbind("click").click( do_logout );
+			$( "button#logout" ).off("click").click( do_logout );
 		}
 
 		var keepAliveInterval = null;
@@ -435,7 +435,7 @@ function loginsys(){
 					$( "div.logout span.usertools span.ui-icon-wrench" ).removeClass( "disable" );
 
 					//Auf Click hoeren
-					$( "div.logout span.usertools span.ui-icon-wrench" ).unbind('click').click( function() {
+					$( "div.logout span.usertools span.ui-icon-wrench" ).off('click').click( function() {
 						$.ajax({
 							type: "GET",
 							url: domain + "/load/backend."+ jsdevmin +".js",
@@ -454,7 +454,7 @@ function loginsys(){
 				}
 
 				//Useradministration
-				$( "div.logout span.usertools span.ui-icon-person" ).unbind('click').click( function() {
+				$( "div.logout span.usertools span.ui-icon-person" ).off('click').click( function() {
 					//authocode Manager oeffnen
 					authCodeManager();
 				});
@@ -471,7 +471,7 @@ function loginsys(){
 		function task(){
 			adminButtons();
 			//noch öfter wäre unnötig!
-			$( document ).unbind( "ajaxComplete", task );
+			$( document ).off( "ajaxComplete", task );
 		}
 		$( document ).ajaxComplete(task);
 	}

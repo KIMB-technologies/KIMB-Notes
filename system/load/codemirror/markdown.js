@@ -1,4 +1,884 @@
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
-// Distributed under an MIT license: http://codemirror.net/LICENSE
+// Distributed under an MIT license: https://codemirror.net/LICENSE
 
-!function(t){"object"==typeof exports&&"object"==typeof module?t(require("../../lib/codemirror"),require("../xml/xml"),require("../meta")):"function"==typeof define&&define.amd?define(["../../lib/codemirror","../xml/xml","../meta"],t):t(CodeMirror)}(function(t){"use strict";t.defineMode("markdown",function(e,i){function n(i){if(t.findModeByName){var n=t.findModeByName(i);n&&(i=n.mime||n.mimes[0])}var r=t.getMode(e,i);return"null"==r.name?null:r}function r(t,e,i){return e.f=e.inline=i,i(t,e)}function a(t,e,i){return e.f=e.block=i,i(t,e)}function o(t){return!t||!/\S/.test(t.string)}function l(t){return t.linkTitle=!1,t.em=!1,t.strong=!1,t.strikethrough=!1,t.quote=0,t.indentedCode=!1,T&&t.f==g&&(t.f=c,t.block=h),t.trailingSpace=0,t.trailingSpaceNewLine=!1,t.prevLine=t.thisLine,t.thisLine=null,null}function h(e,a){var l=e.sol(),h=a.list!==!1,g=a.indentedCode;a.indentedCode=!1,h&&(a.indentationDiff>=0?(a.indentationDiff<4&&(a.indentation-=a.indentationDiff),a.list=null):a.indentation>0?a.list=null:a.list=!1);var m=null;if(a.indentationDiff>=4)return e.skipToEnd(),g||o(a.prevLine)?(a.indentation-=4,a.indentedCode=!0,F.code):null;if(e.eatSpace())return null;if((m=e.match(C))&&m[1].length<=6)return a.header=m[1].length,i.highlightFormatting&&(a.formatting="header"),a.f=a.inline,s(a);if(!(o(a.prevLine)||a.quote||h||g)&&(m=e.match(y)))return a.header="="==m[0].charAt(0)?1:2,i.highlightFormatting&&(a.formatting="header"),a.f=a.inline,s(a);if(e.eat(">"))return a.quote=l?1:a.quote+1,i.highlightFormatting&&(a.formatting="quote"),e.eatSpace(),s(a);if("["===e.peek())return r(e,a,v);if(e.match(M,!0))return a.hr=!0,F.hr;if(m=e.match(b)){var u=m[1]?"ol":"ul";for(a.indentation=e.column()+e.current().length,a.list=!0;a.listStack&&e.column()<a.listStack[a.listStack.length-1];)a.listStack.pop();return a.listStack.push(a.indentation),i.taskLists&&e.match(w,!1)&&(a.taskList=!0),a.f=a.inline,i.highlightFormatting&&(a.formatting=["list","list-"+u]),s(a)}return i.fencedCodeBlocks&&(m=e.match(D,!0))?(a.fencedChars=m[1],a.localMode=n(m[2]),a.localMode&&(a.localState=t.startState(a.localMode)),a.f=a.block=f,i.highlightFormatting&&(a.formatting="code-block"),a.code=-1,s(a)):r(e,a,a.inline)}function g(e,i){var n=L.token(e,i.htmlState);if(!T){var r=t.innerMode(L,i.htmlState);("xml"==r.mode.name&&null===r.state.tagStart&&!r.state.context&&r.state.tokenize.isInText||i.md_inside&&e.current().indexOf(">")>-1)&&(i.f=c,i.block=h,i.htmlState=null)}return n}function f(t,e){return e.fencedChars&&t.match(e.fencedChars,!1)?(e.localMode=e.localState=null,e.f=e.block=m,null):e.localMode?e.localMode.token(t,e.localState):(t.skipToEnd(),F.code)}function m(t,e){t.match(e.fencedChars),e.block=h,e.f=c,e.fencedChars=null,i.highlightFormatting&&(e.formatting="code-block"),e.code=1;var n=s(e);return e.code=0,n}function s(t){var e=[];if(t.formatting){e.push(F.formatting),"string"==typeof t.formatting&&(t.formatting=[t.formatting]);for(var n=0;n<t.formatting.length;n++)e.push(F.formatting+"-"+t.formatting[n]),"header"===t.formatting[n]&&e.push(F.formatting+"-"+t.formatting[n]+"-"+t.header),"quote"===t.formatting[n]&&(!i.maxBlockquoteDepth||i.maxBlockquoteDepth>=t.quote?e.push(F.formatting+"-"+t.formatting[n]+"-"+t.quote):e.push("error"))}if(t.taskOpen)return e.push("meta"),e.length?e.join(" "):null;if(t.taskClosed)return e.push("property"),e.length?e.join(" "):null;if(t.linkHref?e.push(F.linkHref,"url"):(t.strong&&e.push(F.strong),t.em&&e.push(F.em),t.strikethrough&&e.push(F.strikethrough),t.linkText&&e.push(F.linkText),t.code&&e.push(F.code),t.image&&e.push(F.image),t.imageAltText&&e.push(F.imageAltText,"link"),t.imageMarker&&e.push(F.imageMarker)),t.header&&e.push(F.header,F.header+"-"+t.header),t.quote&&(e.push(F.quote),!i.maxBlockquoteDepth||i.maxBlockquoteDepth>=t.quote?e.push(F.quote+"-"+t.quote):e.push(F.quote+"-"+i.maxBlockquoteDepth)),t.list!==!1){var r=(t.listStack.length-1)%3;r?1===r?e.push(F.list2):e.push(F.list3):e.push(F.list1)}return t.trailingSpaceNewLine?e.push("trailing-space-new-line"):t.trailingSpace&&e.push("trailing-space-"+(t.trailingSpace%2?"a":"b")),e.length?e.join(" "):null}function u(t,e){return t.match(B,!0)?s(e):void 0}function c(e,n){var r=n.text(e,n);if("undefined"!=typeof r)return r;if(n.list)return n.list=null,s(n);if(n.taskList){var o="x"!==e.match(w,!0)[1];return o?n.taskOpen=!0:n.taskClosed=!0,i.highlightFormatting&&(n.formatting="task"),n.taskList=!1,s(n)}if(n.taskOpen=!1,n.taskClosed=!1,n.header&&e.match(/^#+$/,!0))return i.highlightFormatting&&(n.formatting="header"),s(n);var l=e.sol(),h=e.next();if(n.linkTitle){n.linkTitle=!1;var f=h;"("===h&&(f=")"),f=(f+"").replace(/([.?*+^$[\]\\(){}|-])/g,"\\$1");var m="^\\s*(?:[^"+f+"\\\\]+|\\\\\\\\|\\\\.)"+f;if(e.match(new RegExp(m),!0))return F.linkHref}if("`"===h){var u=n.formatting;i.highlightFormatting&&(n.formatting="code"),e.eatWhile("`");var c=e.current().length;if(0==n.code)return n.code=c,s(n);if(c==n.code){var p=s(n);return n.code=0,p}return n.formatting=u,s(n)}if(n.code)return s(n);if("\\"===h&&(e.next(),i.highlightFormatting)){var v=s(n),S=F.formatting+"-escape";return v?v+" "+S:S}if("!"===h&&e.match(/\[[^\]]*\] ?(?:\(|\[)/,!1))return n.imageMarker=!0,n.image=!0,i.highlightFormatting&&(n.formatting="image"),s(n);if("["===h&&n.imageMarker&&e.match(/[^\]]*\](\(.*?\)| ?\[.*?\])/,!1))return n.imageMarker=!1,n.imageAltText=!0,i.highlightFormatting&&(n.formatting="image"),s(n);if("]"===h&&n.imageAltText){i.highlightFormatting&&(n.formatting="image");var v=s(n);return n.imageAltText=!1,n.image=!1,n.inline=n.f=k,v}if("["===h&&e.match(/[^\]]*\](\(.*\)| ?\[.*?\])/,!1)&&!n.image)return n.linkText=!0,i.highlightFormatting&&(n.formatting="link"),s(n);if("]"===h&&n.linkText&&e.match(/\(.*?\)| ?\[.*?\]/,!1)){i.highlightFormatting&&(n.formatting="link");var v=s(n);return n.linkText=!1,n.inline=n.f=k,v}if("<"===h&&e.match(/^(https?|ftps?):\/\/(?:[^\\>]|\\.)+>/,!1)){n.f=n.inline=d,i.highlightFormatting&&(n.formatting="link");var v=s(n);return v?v+=" ":v="",v+F.linkInline}if("<"===h&&e.match(/^[^> \\]+@(?:[^\\>]|\\.)+>/,!1)){n.f=n.inline=d,i.highlightFormatting&&(n.formatting="link");var v=s(n);return v?v+=" ":v="",v+F.linkEmail}if("<"===h&&e.match(/^(!--|\w)/,!1)){var x=e.string.indexOf(">",e.pos);if(-1!=x){var T=e.string.substring(e.start,x);/markdown\s*=\s*('|"){0,1}1('|"){0,1}/.test(T)&&(n.md_inside=!0)}return e.backUp(1),n.htmlState=t.startState(L),a(e,n,g)}if("<"===h&&e.match(/^\/\w*?>/))return n.md_inside=!1,"tag";var q=!1;if(!i.underscoresBreakWords&&"_"===h&&"_"!==e.peek()&&e.match(/(\w)/,!1)){var M=e.pos-2;if(M>=0){var b=e.string.charAt(M);"_"!==b&&b.match(/(\w)/,!1)&&(q=!0)}}if("*"===h||"_"===h&&!q)if(l&&" "===e.peek());else{if(n.strong===h&&e.eat(h)){i.highlightFormatting&&(n.formatting="strong");var p=s(n);return n.strong=!1,p}if(!n.strong&&e.eat(h))return n.strong=h,i.highlightFormatting&&(n.formatting="strong"),s(n);if(n.em===h){i.highlightFormatting&&(n.formatting="em");var p=s(n);return n.em=!1,p}if(!n.em)return n.em=h,i.highlightFormatting&&(n.formatting="em"),s(n)}else if(" "===h&&(e.eat("*")||e.eat("_"))){if(" "===e.peek())return s(n);e.backUp(1)}if(i.strikethrough)if("~"===h&&e.eatWhile(h)){if(n.strikethrough){i.highlightFormatting&&(n.formatting="strikethrough");var p=s(n);return n.strikethrough=!1,p}if(e.match(/^[^\s]/,!1))return n.strikethrough=!0,i.highlightFormatting&&(n.formatting="strikethrough"),s(n)}else if(" "===h&&e.match(/^~~/,!0)){if(" "===e.peek())return s(n);e.backUp(2)}return" "===h&&(e.match(/ +$/,!1)?n.trailingSpace++:n.trailingSpace&&(n.trailingSpaceNewLine=!0)),s(n)}function d(t,e){var n=t.next();if(">"===n){e.f=e.inline=c,i.highlightFormatting&&(e.formatting="link");var r=s(e);return r?r+=" ":r="",r+F.linkInline}return t.match(/^[^>]+/,!0),F.linkInline}function k(t,e){if(t.eatSpace())return null;var n=t.next();return"("===n||"["===n?(e.f=e.inline=p("("===n?")":"]",0),i.highlightFormatting&&(e.formatting="link-string"),e.linkHref=!0,s(e)):"error"}function p(t){return function(e,n){var r=e.next();if(r===t){n.f=n.inline=c,i.highlightFormatting&&(n.formatting="link-string");var a=s(n);return n.linkHref=!1,a}return e.match(_[t]),n.linkHref=!0,s(n)}}function v(t,e){return t.match(/^([^\]\\]|\\.)*\]:/,!1)?(e.f=S,t.next(),i.highlightFormatting&&(e.formatting="link"),e.linkText=!0,s(e)):r(t,e,c)}function S(t,e){if(t.match(/^\]:/,!0)){e.f=e.inline=x,i.highlightFormatting&&(e.formatting="link");var n=s(e);return e.linkText=!1,n}return t.match(/^([^\]\\]|\\.)+/,!0),F.linkText}function x(t,e){return t.eatSpace()?null:(t.match(/^[^\s]+/,!0),void 0===t.peek()?e.linkTitle=!0:t.match(/^(?:\s+(?:"(?:[^"\\]|\\\\|\\.)+"|'(?:[^'\\]|\\\\|\\.)+'|\((?:[^)\\]|\\\\|\\.)+\)))?/,!0),e.f=e.inline=c,F.linkHref+" url")}var L=t.getMode(e,"text/html"),T="null"==L.name;void 0===i.highlightFormatting&&(i.highlightFormatting=!1),void 0===i.maxBlockquoteDepth&&(i.maxBlockquoteDepth=0),void 0===i.underscoresBreakWords&&(i.underscoresBreakWords=!0),void 0===i.taskLists&&(i.taskLists=!1),void 0===i.strikethrough&&(i.strikethrough=!1),void 0===i.tokenTypeOverrides&&(i.tokenTypeOverrides={});var F={header:"header",code:"comment",quote:"quote",list1:"variable-2",list2:"variable-3",list3:"keyword",hr:"hr",image:"image",imageAltText:"image-alt-text",imageMarker:"image-marker",formatting:"formatting",linkInline:"link",linkEmail:"link",linkText:"link",linkHref:"string",em:"em",strong:"strong",strikethrough:"strikethrough"};for(var q in F)F.hasOwnProperty(q)&&i.tokenTypeOverrides[q]&&(F[q]=i.tokenTypeOverrides[q]);var M=/^([*\-_])(?:\s*\1){2,}\s*$/,b=/^(?:[*\-+]|^[0-9]+([.)]))\s+/,w=/^\[(x| )\](?=\s)/,C=i.allowAtxHeaderWithoutSpace?/^(#+)/:/^(#+)(?: |$)/,y=/^ *(?:\={1,}|-{1,})\s*$/,B=/^[^#!\[\]*_\\<>` "'(~]+/,D=new RegExp("^("+(i.fencedCodeBlocks===!0?"~~~+|```+":i.fencedCodeBlocks)+")[ \\t]*([\\w+#-]*)"),_={")":/^(?:[^\\\(\)]|\\.|\((?:[^\\\(\)]|\\.)*\))*?(?=\))/,"]":/^(?:[^\\\[\]]|\\.|\[(?:[^\\\[\\]]|\\.)*\])*?(?=\])/},H={startState:function(){return{f:h,prevLine:null,thisLine:null,block:h,htmlState:null,indentation:0,inline:c,text:u,formatting:!1,linkText:!1,linkHref:!1,linkTitle:!1,code:0,em:!1,strong:!1,header:0,hr:!1,taskList:!1,list:!1,listStack:[],quote:0,trailingSpace:0,trailingSpaceNewLine:!1,strikethrough:!1,fencedChars:null}},copyState:function(e){return{f:e.f,prevLine:e.prevLine,thisLine:e.thisLine,block:e.block,htmlState:e.htmlState&&t.copyState(L,e.htmlState),indentation:e.indentation,localMode:e.localMode,localState:e.localMode?t.copyState(e.localMode,e.localState):null,inline:e.inline,text:e.text,formatting:!1,linkTitle:e.linkTitle,code:e.code,em:e.em,strong:e.strong,strikethrough:e.strikethrough,header:e.header,hr:e.hr,taskList:e.taskList,list:e.list,listStack:e.listStack.slice(0),quote:e.quote,indentedCode:e.indentedCode,trailingSpace:e.trailingSpace,trailingSpaceNewLine:e.trailingSpaceNewLine,md_inside:e.md_inside,fencedChars:e.fencedChars}},token:function(t,e){if(e.formatting=!1,t!=e.thisLine){var i=e.header||e.hr;if(e.header=0,e.hr=!1,t.match(/^\s*$/,!0)||i){if(l(e),!i)return null;e.prevLine=null}e.prevLine=e.thisLine,e.thisLine=t,e.taskList=!1,e.trailingSpace=0,e.trailingSpaceNewLine=!1,e.f=e.block;var n=t.match(/^\s*/,!0)[0].replace(/\t/g,"    ").length;if(e.indentationDiff=Math.min(n-e.indentation,4),e.indentation=e.indentation+e.indentationDiff,n>0)return null}return e.f(t,e)},innerMode:function(t){return t.block==g?{state:t.htmlState,mode:L}:t.localState?{state:t.localState,mode:t.localMode}:{state:t,mode:H}},blankLine:l,getType:s,closeBrackets:"()[]{}''\"\"``",fold:"markdown"};return H},"xml"),t.defineMIME("text/x-markdown","markdown")});
+(function(mod) {
+  if (typeof exports == "object" && typeof module == "object") // CommonJS
+    mod(require("../../lib/codemirror"), require("../xml/xml"), require("../meta"));
+  else if (typeof define == "function" && define.amd) // AMD
+    define(["../../lib/codemirror", "../xml/xml", "../meta"], mod);
+  else // Plain browser env
+    mod(CodeMirror);
+})(function(CodeMirror) {
+"use strict";
+
+CodeMirror.defineMode("markdown", function(cmCfg, modeCfg) {
+
+  var htmlMode = CodeMirror.getMode(cmCfg, "text/html");
+  var htmlModeMissing = htmlMode.name == "null"
+
+  function getMode(name) {
+    if (CodeMirror.findModeByName) {
+      var found = CodeMirror.findModeByName(name);
+      if (found) name = found.mime || found.mimes[0];
+    }
+    var mode = CodeMirror.getMode(cmCfg, name);
+    return mode.name == "null" ? null : mode;
+  }
+
+  // Should characters that affect highlighting be highlighted separate?
+  // Does not include characters that will be output (such as `1.` and `-` for lists)
+  if (modeCfg.highlightFormatting === undefined)
+    modeCfg.highlightFormatting = false;
+
+  // Maximum number of nested blockquotes. Set to 0 for infinite nesting.
+  // Excess `>` will emit `error` token.
+  if (modeCfg.maxBlockquoteDepth === undefined)
+    modeCfg.maxBlockquoteDepth = 0;
+
+  // Turn on task lists? ("- [ ] " and "- [x] ")
+  if (modeCfg.taskLists === undefined) modeCfg.taskLists = false;
+
+  // Turn on strikethrough syntax
+  if (modeCfg.strikethrough === undefined)
+    modeCfg.strikethrough = false;
+
+  if (modeCfg.emoji === undefined)
+    modeCfg.emoji = false;
+
+  if (modeCfg.fencedCodeBlockHighlighting === undefined)
+    modeCfg.fencedCodeBlockHighlighting = true;
+
+  if (modeCfg.xml === undefined)
+    modeCfg.xml = true;
+
+  // Allow token types to be overridden by user-provided token types.
+  if (modeCfg.tokenTypeOverrides === undefined)
+    modeCfg.tokenTypeOverrides = {};
+
+  var tokenTypes = {
+    header: "header",
+    code: "comment",
+    quote: "quote",
+    list1: "variable-2",
+    list2: "variable-3",
+    list3: "keyword",
+    hr: "hr",
+    image: "image",
+    imageAltText: "image-alt-text",
+    imageMarker: "image-marker",
+    formatting: "formatting",
+    linkInline: "link",
+    linkEmail: "link",
+    linkText: "link",
+    linkHref: "string",
+    em: "em",
+    strong: "strong",
+    strikethrough: "strikethrough",
+    emoji: "builtin"
+  };
+
+  for (var tokenType in tokenTypes) {
+    if (tokenTypes.hasOwnProperty(tokenType) && modeCfg.tokenTypeOverrides[tokenType]) {
+      tokenTypes[tokenType] = modeCfg.tokenTypeOverrides[tokenType];
+    }
+  }
+
+  var hrRE = /^([*\-_])(?:\s*\1){2,}\s*$/
+  ,   listRE = /^(?:[*\-+]|^[0-9]+([.)]))\s+/
+  ,   taskListRE = /^\[(x| )\](?=\s)/i // Must follow listRE
+  ,   atxHeaderRE = modeCfg.allowAtxHeaderWithoutSpace ? /^(#+)/ : /^(#+)(?: |$)/
+  ,   setextHeaderRE = /^ *(?:\={1,}|-{1,})\s*$/
+  ,   textRE = /^[^#!\[\]*_\\<>` "'(~:]+/
+  ,   fencedCodeRE = /^(~~~+|```+)[ \t]*([\w+#-]*)[^\n`]*$/
+  ,   linkDefRE = /^\s*\[[^\]]+?\]:.*$/ // naive link-definition
+  ,   punctuation = /[!"#$%&'()*+,\-.\/:;<=>?@\[\\\]^_`{|}~\xA1\xA7\xAB\xB6\xB7\xBB\xBF\u037E\u0387\u055A-\u055F\u0589\u058A\u05BE\u05C0\u05C3\u05C6\u05F3\u05F4\u0609\u060A\u060C\u060D\u061B\u061E\u061F\u066A-\u066D\u06D4\u0700-\u070D\u07F7-\u07F9\u0830-\u083E\u085E\u0964\u0965\u0970\u0AF0\u0DF4\u0E4F\u0E5A\u0E5B\u0F04-\u0F12\u0F14\u0F3A-\u0F3D\u0F85\u0FD0-\u0FD4\u0FD9\u0FDA\u104A-\u104F\u10FB\u1360-\u1368\u1400\u166D\u166E\u169B\u169C\u16EB-\u16ED\u1735\u1736\u17D4-\u17D6\u17D8-\u17DA\u1800-\u180A\u1944\u1945\u1A1E\u1A1F\u1AA0-\u1AA6\u1AA8-\u1AAD\u1B5A-\u1B60\u1BFC-\u1BFF\u1C3B-\u1C3F\u1C7E\u1C7F\u1CC0-\u1CC7\u1CD3\u2010-\u2027\u2030-\u2043\u2045-\u2051\u2053-\u205E\u207D\u207E\u208D\u208E\u2308-\u230B\u2329\u232A\u2768-\u2775\u27C5\u27C6\u27E6-\u27EF\u2983-\u2998\u29D8-\u29DB\u29FC\u29FD\u2CF9-\u2CFC\u2CFE\u2CFF\u2D70\u2E00-\u2E2E\u2E30-\u2E42\u3001-\u3003\u3008-\u3011\u3014-\u301F\u3030\u303D\u30A0\u30FB\uA4FE\uA4FF\uA60D-\uA60F\uA673\uA67E\uA6F2-\uA6F7\uA874-\uA877\uA8CE\uA8CF\uA8F8-\uA8FA\uA8FC\uA92E\uA92F\uA95F\uA9C1-\uA9CD\uA9DE\uA9DF\uAA5C-\uAA5F\uAADE\uAADF\uAAF0\uAAF1\uABEB\uFD3E\uFD3F\uFE10-\uFE19\uFE30-\uFE52\uFE54-\uFE61\uFE63\uFE68\uFE6A\uFE6B\uFF01-\uFF03\uFF05-\uFF0A\uFF0C-\uFF0F\uFF1A\uFF1B\uFF1F\uFF20\uFF3B-\uFF3D\uFF3F\uFF5B\uFF5D\uFF5F-\uFF65]|\uD800[\uDD00-\uDD02\uDF9F\uDFD0]|\uD801\uDD6F|\uD802[\uDC57\uDD1F\uDD3F\uDE50-\uDE58\uDE7F\uDEF0-\uDEF6\uDF39-\uDF3F\uDF99-\uDF9C]|\uD804[\uDC47-\uDC4D\uDCBB\uDCBC\uDCBE-\uDCC1\uDD40-\uDD43\uDD74\uDD75\uDDC5-\uDDC9\uDDCD\uDDDB\uDDDD-\uDDDF\uDE38-\uDE3D\uDEA9]|\uD805[\uDCC6\uDDC1-\uDDD7\uDE41-\uDE43\uDF3C-\uDF3E]|\uD809[\uDC70-\uDC74]|\uD81A[\uDE6E\uDE6F\uDEF5\uDF37-\uDF3B\uDF44]|\uD82F\uDC9F|\uD836[\uDE87-\uDE8B]/
+  ,   expandedTab = "    " // CommonMark specifies tab as 4 spaces
+
+  function switchInline(stream, state, f) {
+    state.f = state.inline = f;
+    return f(stream, state);
+  }
+
+  function switchBlock(stream, state, f) {
+    state.f = state.block = f;
+    return f(stream, state);
+  }
+
+  function lineIsEmpty(line) {
+    return !line || !/\S/.test(line.string)
+  }
+
+  // Blocks
+
+  function blankLine(state) {
+    // Reset linkTitle state
+    state.linkTitle = false;
+    state.linkHref = false;
+    state.linkText = false;
+    // Reset EM state
+    state.em = false;
+    // Reset STRONG state
+    state.strong = false;
+    // Reset strikethrough state
+    state.strikethrough = false;
+    // Reset state.quote
+    state.quote = 0;
+    // Reset state.indentedCode
+    state.indentedCode = false;
+    if (state.f == htmlBlock) {
+      var exit = htmlModeMissing
+      if (!exit) {
+        var inner = CodeMirror.innerMode(htmlMode, state.htmlState)
+        exit = inner.mode.name == "xml" && inner.state.tagStart === null &&
+          (!inner.state.context && inner.state.tokenize.isInText)
+      }
+      if (exit) {
+        state.f = inlineNormal;
+        state.block = blockNormal;
+        state.htmlState = null;
+      }
+    }
+    // Reset state.trailingSpace
+    state.trailingSpace = 0;
+    state.trailingSpaceNewLine = false;
+    // Mark this line as blank
+    state.prevLine = state.thisLine
+    state.thisLine = {stream: null}
+    return null;
+  }
+
+  function blockNormal(stream, state) {
+    var firstTokenOnLine = stream.column() === state.indentation;
+    var prevLineLineIsEmpty = lineIsEmpty(state.prevLine.stream);
+    var prevLineIsIndentedCode = state.indentedCode;
+    var prevLineIsHr = state.prevLine.hr;
+    var prevLineIsList = state.list !== false;
+    var maxNonCodeIndentation = (state.listStack[state.listStack.length - 1] || 0) + 3;
+
+    state.indentedCode = false;
+
+    var lineIndentation = state.indentation;
+    // compute once per line (on first token)
+    if (state.indentationDiff === null) {
+      state.indentationDiff = state.indentation;
+      if (prevLineIsList) {
+        // Reset inline styles which shouldn't propagate aross list items
+        state.em = false;
+        state.strong = false;
+        state.code = false;
+        state.strikethrough = false;
+
+        state.list = null;
+        // While this list item's marker's indentation is less than the deepest
+        //  list item's content's indentation,pop the deepest list item
+        //  indentation off the stack, and update block indentation state
+        while (lineIndentation < state.listStack[state.listStack.length - 1]) {
+          state.listStack.pop();
+          if (state.listStack.length) {
+            state.indentation = state.listStack[state.listStack.length - 1];
+          // less than the first list's indent -> the line is no longer a list
+          } else {
+            state.list = false;
+          }
+        }
+        if (state.list !== false) {
+          state.indentationDiff = lineIndentation - state.listStack[state.listStack.length - 1]
+        }
+      }
+    }
+
+    // not comprehensive (currently only for setext detection purposes)
+    var allowsInlineContinuation = (
+        !prevLineLineIsEmpty && !prevLineIsHr && !state.prevLine.header &&
+        (!prevLineIsList || !prevLineIsIndentedCode) &&
+        !state.prevLine.fencedCodeEnd
+    );
+
+    var isHr = (state.list === false || prevLineIsHr || prevLineLineIsEmpty) &&
+      state.indentation <= maxNonCodeIndentation && stream.match(hrRE);
+
+    var match = null;
+    if (state.indentationDiff >= 4 && (prevLineIsIndentedCode || state.prevLine.fencedCodeEnd ||
+         state.prevLine.header || prevLineLineIsEmpty)) {
+      stream.skipToEnd();
+      state.indentedCode = true;
+      return tokenTypes.code;
+    } else if (stream.eatSpace()) {
+      return null;
+    } else if (firstTokenOnLine && state.indentation <= maxNonCodeIndentation && (match = stream.match(atxHeaderRE)) && match[1].length <= 6) {
+      state.quote = 0;
+      state.header = match[1].length;
+      state.thisLine.header = true;
+      if (modeCfg.highlightFormatting) state.formatting = "header";
+      state.f = state.inline;
+      return getType(state);
+    } else if (state.indentation <= maxNonCodeIndentation && stream.eat('>')) {
+      state.quote = firstTokenOnLine ? 1 : state.quote + 1;
+      if (modeCfg.highlightFormatting) state.formatting = "quote";
+      stream.eatSpace();
+      return getType(state);
+    } else if (!isHr && !state.setext && firstTokenOnLine && state.indentation <= maxNonCodeIndentation && (match = stream.match(listRE))) {
+      var listType = match[1] ? "ol" : "ul";
+
+      state.indentation = lineIndentation + stream.current().length;
+      state.list = true;
+      state.quote = 0;
+
+      // Add this list item's content's indentation to the stack
+      state.listStack.push(state.indentation);
+
+      if (modeCfg.taskLists && stream.match(taskListRE, false)) {
+        state.taskList = true;
+      }
+      state.f = state.inline;
+      if (modeCfg.highlightFormatting) state.formatting = ["list", "list-" + listType];
+      return getType(state);
+    } else if (firstTokenOnLine && state.indentation <= maxNonCodeIndentation && (match = stream.match(fencedCodeRE, true))) {
+      state.quote = 0;
+      state.fencedEndRE = new RegExp(match[1] + "+ *$");
+      // try switching mode
+      state.localMode = modeCfg.fencedCodeBlockHighlighting && getMode(match[2]);
+      if (state.localMode) state.localState = CodeMirror.startState(state.localMode);
+      state.f = state.block = local;
+      if (modeCfg.highlightFormatting) state.formatting = "code-block";
+      state.code = -1
+      return getType(state);
+    // SETEXT has lowest block-scope precedence after HR, so check it after
+    //  the others (code, blockquote, list...)
+    } else if (
+      // if setext set, indicates line after ---/===
+      state.setext || (
+        // line before ---/===
+        (!allowsInlineContinuation || !prevLineIsList) && !state.quote && state.list === false &&
+        !state.code && !isHr && !linkDefRE.test(stream.string) &&
+        (match = stream.lookAhead(1)) && (match = match.match(setextHeaderRE))
+      )
+    ) {
+      if ( !state.setext ) {
+        state.header = match[0].charAt(0) == '=' ? 1 : 2;
+        state.setext = state.header;
+      } else {
+        state.header = state.setext;
+        // has no effect on type so we can reset it now
+        state.setext = 0;
+        stream.skipToEnd();
+        if (modeCfg.highlightFormatting) state.formatting = "header";
+      }
+      state.thisLine.header = true;
+      state.f = state.inline;
+      return getType(state);
+    } else if (isHr) {
+      stream.skipToEnd();
+      state.hr = true;
+      state.thisLine.hr = true;
+      return tokenTypes.hr;
+    } else if (stream.peek() === '[') {
+      return switchInline(stream, state, footnoteLink);
+    }
+
+    return switchInline(stream, state, state.inline);
+  }
+
+  function htmlBlock(stream, state) {
+    var style = htmlMode.token(stream, state.htmlState);
+    if (!htmlModeMissing) {
+      var inner = CodeMirror.innerMode(htmlMode, state.htmlState)
+      if ((inner.mode.name == "xml" && inner.state.tagStart === null &&
+           (!inner.state.context && inner.state.tokenize.isInText)) ||
+          (state.md_inside && stream.current().indexOf(">") > -1)) {
+        state.f = inlineNormal;
+        state.block = blockNormal;
+        state.htmlState = null;
+      }
+    }
+    return style;
+  }
+
+  function local(stream, state) {
+    var currListInd = state.listStack[state.listStack.length - 1] || 0;
+    var hasExitedList = state.indentation < currListInd;
+    var maxFencedEndInd = currListInd + 3;
+    if (state.fencedEndRE && state.indentation <= maxFencedEndInd && (hasExitedList || stream.match(state.fencedEndRE))) {
+      if (modeCfg.highlightFormatting) state.formatting = "code-block";
+      var returnType;
+      if (!hasExitedList) returnType = getType(state)
+      state.localMode = state.localState = null;
+      state.block = blockNormal;
+      state.f = inlineNormal;
+      state.fencedEndRE = null;
+      state.code = 0
+      state.thisLine.fencedCodeEnd = true;
+      if (hasExitedList) return switchBlock(stream, state, state.block);
+      return returnType;
+    } else if (state.localMode) {
+      return state.localMode.token(stream, state.localState);
+    } else {
+      stream.skipToEnd();
+      return tokenTypes.code;
+    }
+  }
+
+  // Inline
+  function getType(state) {
+    var styles = [];
+
+    if (state.formatting) {
+      styles.push(tokenTypes.formatting);
+
+      if (typeof state.formatting === "string") state.formatting = [state.formatting];
+
+      for (var i = 0; i < state.formatting.length; i++) {
+        styles.push(tokenTypes.formatting + "-" + state.formatting[i]);
+
+        if (state.formatting[i] === "header") {
+          styles.push(tokenTypes.formatting + "-" + state.formatting[i] + "-" + state.header);
+        }
+
+        // Add `formatting-quote` and `formatting-quote-#` for blockquotes
+        // Add `error` instead if the maximum blockquote nesting depth is passed
+        if (state.formatting[i] === "quote") {
+          if (!modeCfg.maxBlockquoteDepth || modeCfg.maxBlockquoteDepth >= state.quote) {
+            styles.push(tokenTypes.formatting + "-" + state.formatting[i] + "-" + state.quote);
+          } else {
+            styles.push("error");
+          }
+        }
+      }
+    }
+
+    if (state.taskOpen) {
+      styles.push("meta");
+      return styles.length ? styles.join(' ') : null;
+    }
+    if (state.taskClosed) {
+      styles.push("property");
+      return styles.length ? styles.join(' ') : null;
+    }
+
+    if (state.linkHref) {
+      styles.push(tokenTypes.linkHref, "url");
+    } else { // Only apply inline styles to non-url text
+      if (state.strong) { styles.push(tokenTypes.strong); }
+      if (state.em) { styles.push(tokenTypes.em); }
+      if (state.strikethrough) { styles.push(tokenTypes.strikethrough); }
+      if (state.emoji) { styles.push(tokenTypes.emoji); }
+      if (state.linkText) { styles.push(tokenTypes.linkText); }
+      if (state.code) { styles.push(tokenTypes.code); }
+      if (state.image) { styles.push(tokenTypes.image); }
+      if (state.imageAltText) { styles.push(tokenTypes.imageAltText, "link"); }
+      if (state.imageMarker) { styles.push(tokenTypes.imageMarker); }
+    }
+
+    if (state.header) { styles.push(tokenTypes.header, tokenTypes.header + "-" + state.header); }
+
+    if (state.quote) {
+      styles.push(tokenTypes.quote);
+
+      // Add `quote-#` where the maximum for `#` is modeCfg.maxBlockquoteDepth
+      if (!modeCfg.maxBlockquoteDepth || modeCfg.maxBlockquoteDepth >= state.quote) {
+        styles.push(tokenTypes.quote + "-" + state.quote);
+      } else {
+        styles.push(tokenTypes.quote + "-" + modeCfg.maxBlockquoteDepth);
+      }
+    }
+
+    if (state.list !== false) {
+      var listMod = (state.listStack.length - 1) % 3;
+      if (!listMod) {
+        styles.push(tokenTypes.list1);
+      } else if (listMod === 1) {
+        styles.push(tokenTypes.list2);
+      } else {
+        styles.push(tokenTypes.list3);
+      }
+    }
+
+    if (state.trailingSpaceNewLine) {
+      styles.push("trailing-space-new-line");
+    } else if (state.trailingSpace) {
+      styles.push("trailing-space-" + (state.trailingSpace % 2 ? "a" : "b"));
+    }
+
+    return styles.length ? styles.join(' ') : null;
+  }
+
+  function handleText(stream, state) {
+    if (stream.match(textRE, true)) {
+      return getType(state);
+    }
+    return undefined;
+  }
+
+  function inlineNormal(stream, state) {
+    var style = state.text(stream, state);
+    if (typeof style !== 'undefined')
+      return style;
+
+    if (state.list) { // List marker (*, +, -, 1., etc)
+      state.list = null;
+      return getType(state);
+    }
+
+    if (state.taskList) {
+      var taskOpen = stream.match(taskListRE, true)[1] === " ";
+      if (taskOpen) state.taskOpen = true;
+      else state.taskClosed = true;
+      if (modeCfg.highlightFormatting) state.formatting = "task";
+      state.taskList = false;
+      return getType(state);
+    }
+
+    state.taskOpen = false;
+    state.taskClosed = false;
+
+    if (state.header && stream.match(/^#+$/, true)) {
+      if (modeCfg.highlightFormatting) state.formatting = "header";
+      return getType(state);
+    }
+
+    var ch = stream.next();
+
+    // Matches link titles present on next line
+    if (state.linkTitle) {
+      state.linkTitle = false;
+      var matchCh = ch;
+      if (ch === '(') {
+        matchCh = ')';
+      }
+      matchCh = (matchCh+'').replace(/([.?*+^\[\]\\(){}|-])/g, "\\$1");
+      var regex = '^\\s*(?:[^' + matchCh + '\\\\]+|\\\\\\\\|\\\\.)' + matchCh;
+      if (stream.match(new RegExp(regex), true)) {
+        return tokenTypes.linkHref;
+      }
+    }
+
+    // If this block is changed, it may need to be updated in GFM mode
+    if (ch === '`') {
+      var previousFormatting = state.formatting;
+      if (modeCfg.highlightFormatting) state.formatting = "code";
+      stream.eatWhile('`');
+      var count = stream.current().length
+      if (state.code == 0 && (!state.quote || count == 1)) {
+        state.code = count
+        return getType(state)
+      } else if (count == state.code) { // Must be exact
+        var t = getType(state)
+        state.code = 0
+        return t
+      } else {
+        state.formatting = previousFormatting
+        return getType(state)
+      }
+    } else if (state.code) {
+      return getType(state);
+    }
+
+    if (ch === '\\') {
+      stream.next();
+      if (modeCfg.highlightFormatting) {
+        var type = getType(state);
+        var formattingEscape = tokenTypes.formatting + "-escape";
+        return type ? type + " " + formattingEscape : formattingEscape;
+      }
+    }
+
+    if (ch === '!' && stream.match(/\[[^\]]*\] ?(?:\(|\[)/, false)) {
+      state.imageMarker = true;
+      state.image = true;
+      if (modeCfg.highlightFormatting) state.formatting = "image";
+      return getType(state);
+    }
+
+    if (ch === '[' && state.imageMarker && stream.match(/[^\]]*\](\(.*?\)| ?\[.*?\])/, false)) {
+      state.imageMarker = false;
+      state.imageAltText = true
+      if (modeCfg.highlightFormatting) state.formatting = "image";
+      return getType(state);
+    }
+
+    if (ch === ']' && state.imageAltText) {
+      if (modeCfg.highlightFormatting) state.formatting = "image";
+      var type = getType(state);
+      state.imageAltText = false;
+      state.image = false;
+      state.inline = state.f = linkHref;
+      return type;
+    }
+
+    if (ch === '[' && !state.image) {
+      if (state.linkText && stream.match(/^.*?\]/)) return getType(state)
+      state.linkText = true;
+      if (modeCfg.highlightFormatting) state.formatting = "link";
+      return getType(state);
+    }
+
+    if (ch === ']' && state.linkText) {
+      if (modeCfg.highlightFormatting) state.formatting = "link";
+      var type = getType(state);
+      state.linkText = false;
+      state.inline = state.f = stream.match(/\(.*?\)| ?\[.*?\]/, false) ? linkHref : inlineNormal
+      return type;
+    }
+
+    if (ch === '<' && stream.match(/^(https?|ftps?):\/\/(?:[^\\>]|\\.)+>/, false)) {
+      state.f = state.inline = linkInline;
+      if (modeCfg.highlightFormatting) state.formatting = "link";
+      var type = getType(state);
+      if (type){
+        type += " ";
+      } else {
+        type = "";
+      }
+      return type + tokenTypes.linkInline;
+    }
+
+    if (ch === '<' && stream.match(/^[^> \\]+@(?:[^\\>]|\\.)+>/, false)) {
+      state.f = state.inline = linkInline;
+      if (modeCfg.highlightFormatting) state.formatting = "link";
+      var type = getType(state);
+      if (type){
+        type += " ";
+      } else {
+        type = "";
+      }
+      return type + tokenTypes.linkEmail;
+    }
+
+    if (modeCfg.xml && ch === '<' && stream.match(/^(!--|\?|!\[CDATA\[|[a-z][a-z0-9-]*(?:\s+[a-z_:.\-]+(?:\s*=\s*[^>]+)?)*\s*(?:>|$))/i, false)) {
+      var end = stream.string.indexOf(">", stream.pos);
+      if (end != -1) {
+        var atts = stream.string.substring(stream.start, end);
+        if (/markdown\s*=\s*('|"){0,1}1('|"){0,1}/.test(atts)) state.md_inside = true;
+      }
+      stream.backUp(1);
+      state.htmlState = CodeMirror.startState(htmlMode);
+      return switchBlock(stream, state, htmlBlock);
+    }
+
+    if (modeCfg.xml && ch === '<' && stream.match(/^\/\w*?>/)) {
+      state.md_inside = false;
+      return "tag";
+    } else if (ch === "*" || ch === "_") {
+      var len = 1, before = stream.pos == 1 ? " " : stream.string.charAt(stream.pos - 2)
+      while (len < 3 && stream.eat(ch)) len++
+      var after = stream.peek() || " "
+      // See http://spec.commonmark.org/0.27/#emphasis-and-strong-emphasis
+      var leftFlanking = !/\s/.test(after) && (!punctuation.test(after) || /\s/.test(before) || punctuation.test(before))
+      var rightFlanking = !/\s/.test(before) && (!punctuation.test(before) || /\s/.test(after) || punctuation.test(after))
+      var setEm = null, setStrong = null
+      if (len % 2) { // Em
+        if (!state.em && leftFlanking && (ch === "*" || !rightFlanking || punctuation.test(before)))
+          setEm = true
+        else if (state.em == ch && rightFlanking && (ch === "*" || !leftFlanking || punctuation.test(after)))
+          setEm = false
+      }
+      if (len > 1) { // Strong
+        if (!state.strong && leftFlanking && (ch === "*" || !rightFlanking || punctuation.test(before)))
+          setStrong = true
+        else if (state.strong == ch && rightFlanking && (ch === "*" || !leftFlanking || punctuation.test(after)))
+          setStrong = false
+      }
+      if (setStrong != null || setEm != null) {
+        if (modeCfg.highlightFormatting) state.formatting = setEm == null ? "strong" : setStrong == null ? "em" : "strong em"
+        if (setEm === true) state.em = ch
+        if (setStrong === true) state.strong = ch
+        var t = getType(state)
+        if (setEm === false) state.em = false
+        if (setStrong === false) state.strong = false
+        return t
+      }
+    } else if (ch === ' ') {
+      if (stream.eat('*') || stream.eat('_')) { // Probably surrounded by spaces
+        if (stream.peek() === ' ') { // Surrounded by spaces, ignore
+          return getType(state);
+        } else { // Not surrounded by spaces, back up pointer
+          stream.backUp(1);
+        }
+      }
+    }
+
+    if (modeCfg.strikethrough) {
+      if (ch === '~' && stream.eatWhile(ch)) {
+        if (state.strikethrough) {// Remove strikethrough
+          if (modeCfg.highlightFormatting) state.formatting = "strikethrough";
+          var t = getType(state);
+          state.strikethrough = false;
+          return t;
+        } else if (stream.match(/^[^\s]/, false)) {// Add strikethrough
+          state.strikethrough = true;
+          if (modeCfg.highlightFormatting) state.formatting = "strikethrough";
+          return getType(state);
+        }
+      } else if (ch === ' ') {
+        if (stream.match(/^~~/, true)) { // Probably surrounded by space
+          if (stream.peek() === ' ') { // Surrounded by spaces, ignore
+            return getType(state);
+          } else { // Not surrounded by spaces, back up pointer
+            stream.backUp(2);
+          }
+        }
+      }
+    }
+
+    if (modeCfg.emoji && ch === ":" && stream.match(/^(?:[a-z_\d+][a-z_\d+-]*|\-[a-z_\d+][a-z_\d+-]*):/)) {
+      state.emoji = true;
+      if (modeCfg.highlightFormatting) state.formatting = "emoji";
+      var retType = getType(state);
+      state.emoji = false;
+      return retType;
+    }
+
+    if (ch === ' ') {
+      if (stream.match(/^ +$/, false)) {
+        state.trailingSpace++;
+      } else if (state.trailingSpace) {
+        state.trailingSpaceNewLine = true;
+      }
+    }
+
+    return getType(state);
+  }
+
+  function linkInline(stream, state) {
+    var ch = stream.next();
+
+    if (ch === ">") {
+      state.f = state.inline = inlineNormal;
+      if (modeCfg.highlightFormatting) state.formatting = "link";
+      var type = getType(state);
+      if (type){
+        type += " ";
+      } else {
+        type = "";
+      }
+      return type + tokenTypes.linkInline;
+    }
+
+    stream.match(/^[^>]+/, true);
+
+    return tokenTypes.linkInline;
+  }
+
+  function linkHref(stream, state) {
+    // Check if space, and return NULL if so (to avoid marking the space)
+    if(stream.eatSpace()){
+      return null;
+    }
+    var ch = stream.next();
+    if (ch === '(' || ch === '[') {
+      state.f = state.inline = getLinkHrefInside(ch === "(" ? ")" : "]");
+      if (modeCfg.highlightFormatting) state.formatting = "link-string";
+      state.linkHref = true;
+      return getType(state);
+    }
+    return 'error';
+  }
+
+  var linkRE = {
+    ")": /^(?:[^\\\(\)]|\\.|\((?:[^\\\(\)]|\\.)*\))*?(?=\))/,
+    "]": /^(?:[^\\\[\]]|\\.|\[(?:[^\\\[\]]|\\.)*\])*?(?=\])/
+  }
+
+  function getLinkHrefInside(endChar) {
+    return function(stream, state) {
+      var ch = stream.next();
+
+      if (ch === endChar) {
+        state.f = state.inline = inlineNormal;
+        if (modeCfg.highlightFormatting) state.formatting = "link-string";
+        var returnState = getType(state);
+        state.linkHref = false;
+        return returnState;
+      }
+
+      stream.match(linkRE[endChar])
+      state.linkHref = true;
+      return getType(state);
+    };
+  }
+
+  function footnoteLink(stream, state) {
+    if (stream.match(/^([^\]\\]|\\.)*\]:/, false)) {
+      state.f = footnoteLinkInside;
+      stream.next(); // Consume [
+      if (modeCfg.highlightFormatting) state.formatting = "link";
+      state.linkText = true;
+      return getType(state);
+    }
+    return switchInline(stream, state, inlineNormal);
+  }
+
+  function footnoteLinkInside(stream, state) {
+    if (stream.match(/^\]:/, true)) {
+      state.f = state.inline = footnoteUrl;
+      if (modeCfg.highlightFormatting) state.formatting = "link";
+      var returnType = getType(state);
+      state.linkText = false;
+      return returnType;
+    }
+
+    stream.match(/^([^\]\\]|\\.)+/, true);
+
+    return tokenTypes.linkText;
+  }
+
+  function footnoteUrl(stream, state) {
+    // Check if space, and return NULL if so (to avoid marking the space)
+    if(stream.eatSpace()){
+      return null;
+    }
+    // Match URL
+    stream.match(/^[^\s]+/, true);
+    // Check for link title
+    if (stream.peek() === undefined) { // End of line, set flag to check next line
+      state.linkTitle = true;
+    } else { // More content on line, check if link title
+      stream.match(/^(?:\s+(?:"(?:[^"\\]|\\\\|\\.)+"|'(?:[^'\\]|\\\\|\\.)+'|\((?:[^)\\]|\\\\|\\.)+\)))?/, true);
+    }
+    state.f = state.inline = inlineNormal;
+    return tokenTypes.linkHref + " url";
+  }
+
+  var mode = {
+    startState: function() {
+      return {
+        f: blockNormal,
+
+        prevLine: {stream: null},
+        thisLine: {stream: null},
+
+        block: blockNormal,
+        htmlState: null,
+        indentation: 0,
+
+        inline: inlineNormal,
+        text: handleText,
+
+        formatting: false,
+        linkText: false,
+        linkHref: false,
+        linkTitle: false,
+        code: 0,
+        em: false,
+        strong: false,
+        header: 0,
+        setext: 0,
+        hr: false,
+        taskList: false,
+        list: false,
+        listStack: [],
+        quote: 0,
+        trailingSpace: 0,
+        trailingSpaceNewLine: false,
+        strikethrough: false,
+        emoji: false,
+        fencedEndRE: null
+      };
+    },
+
+    copyState: function(s) {
+      return {
+        f: s.f,
+
+        prevLine: s.prevLine,
+        thisLine: s.thisLine,
+
+        block: s.block,
+        htmlState: s.htmlState && CodeMirror.copyState(htmlMode, s.htmlState),
+        indentation: s.indentation,
+
+        localMode: s.localMode,
+        localState: s.localMode ? CodeMirror.copyState(s.localMode, s.localState) : null,
+
+        inline: s.inline,
+        text: s.text,
+        formatting: false,
+        linkText: s.linkText,
+        linkTitle: s.linkTitle,
+        linkHref: s.linkHref,
+        code: s.code,
+        em: s.em,
+        strong: s.strong,
+        strikethrough: s.strikethrough,
+        emoji: s.emoji,
+        header: s.header,
+        setext: s.setext,
+        hr: s.hr,
+        taskList: s.taskList,
+        list: s.list,
+        listStack: s.listStack.slice(0),
+        quote: s.quote,
+        indentedCode: s.indentedCode,
+        trailingSpace: s.trailingSpace,
+        trailingSpaceNewLine: s.trailingSpaceNewLine,
+        md_inside: s.md_inside,
+        fencedEndRE: s.fencedEndRE
+      };
+    },
+
+    token: function(stream, state) {
+
+      // Reset state.formatting
+      state.formatting = false;
+
+      if (stream != state.thisLine.stream) {
+        state.header = 0;
+        state.hr = false;
+
+        if (stream.match(/^\s*$/, true)) {
+          blankLine(state);
+          return null;
+        }
+
+        state.prevLine = state.thisLine
+        state.thisLine = {stream: stream}
+
+        // Reset state.taskList
+        state.taskList = false;
+
+        // Reset state.trailingSpace
+        state.trailingSpace = 0;
+        state.trailingSpaceNewLine = false;
+
+        if (!state.localState) {
+          state.f = state.block;
+          if (state.f != htmlBlock) {
+            var indentation = stream.match(/^\s*/, true)[0].replace(/\t/g, expandedTab).length;
+            state.indentation = indentation;
+            state.indentationDiff = null;
+            if (indentation > 0) return null;
+          }
+        }
+      }
+      return state.f(stream, state);
+    },
+
+    innerMode: function(state) {
+      if (state.block == htmlBlock) return {state: state.htmlState, mode: htmlMode};
+      if (state.localState) return {state: state.localState, mode: state.localMode};
+      return {state: state, mode: mode};
+    },
+
+    indent: function(state, textAfter, line) {
+      if (state.block == htmlBlock && htmlMode.indent) return htmlMode.indent(state.htmlState, textAfter, line)
+      if (state.localState && state.localMode.indent) return state.localMode.indent(state.localState, textAfter, line)
+      return CodeMirror.Pass
+    },
+
+    blankLine: blankLine,
+
+    getType: getType,
+
+    blockCommentStart: "<!--",
+    blockCommentEnd: "-->",
+    closeBrackets: "()[]{}''\"\"``",
+    fold: "markdown"
+  };
+  return mode;
+}, "xml");
+
+CodeMirror.defineMIME("text/markdown", "markdown");
+
+CodeMirror.defineMIME("text/x-markdown", "markdown");
+
+});

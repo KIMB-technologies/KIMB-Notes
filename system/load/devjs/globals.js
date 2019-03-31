@@ -93,7 +93,7 @@ function ajax_request( task, post, callback, errcallback ){
 				else{
 					if( systemOfflineMode ){
 						//remove force reconnect if clicked on errormsg 
-						$("div.global.error.message").unbind('click');
+						$("div.global.error.message").off('click');
 					}
 					//hier online
 					systemOfflineMode = false;

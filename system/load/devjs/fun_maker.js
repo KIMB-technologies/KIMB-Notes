@@ -153,7 +153,7 @@ function maker(noteid, notename, sharecont, savecallback) {
 
 	//Schließen Button (und Freigabe) nutzbar machen
 	function closebutton() {
-		$("button#closenote").unbind("click").click(function () {
+		$("button#closenote").off("click").click(function () {
 			//schließen und speichern
 
 			removeCodeMirrorListeners();
@@ -214,10 +214,10 @@ function maker(noteid, notename, sharecont, savecallback) {
 			$("button#notehistory").removeClass('disable');
 
 			//Freigabe Manager laden
-			$("button#publishnote").unbind('click').click(freigabeManager);
+			$("button#publishnote").off('click').click(freigabeManager);
 
 			//Verlaufs Manager laden
-			$("button#notehistory").unbind('click').click(historyManager);
+			$("button#notehistory").off('click').click(historyManager);
 		}
 	}
 	// Die internen Funktionen, die per Event von CodeMirror aufgerufen werden,
@@ -331,7 +331,7 @@ function maker(noteid, notename, sharecont, savecallback) {
 
 			$("div#notespreview").html(marked(cm_editor.getValue()));
 
-			$(".openothernote").unbind('click').click( function(){
+			$(".openothernote").off('click').click( function(){
 				var id = $(this).attr('noteid');
 				ajaxsave( function (){
 					removeCodeMirrorListeners();
@@ -397,7 +397,7 @@ function maker(noteid, notename, sharecont, savecallback) {
 		here_codemi_save = save;
 
 		//Speichern aktiv mittles Button möglich
-		$("span.noteunsaved").unbind('click').click( ajaxsave );
+		$("span.noteunsaved").off('click').click( ajaxsave );
 	}
 	//Speicherung per AJAX durchführen
 	function ajaxsave(callback) {

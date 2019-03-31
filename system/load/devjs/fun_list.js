@@ -59,7 +59,7 @@ function list(){
 			$( "div.toolbar" ).removeClass("disable");
 
 			//Neue Notiz Button
-			$( "button#newnote" ).unbind("click").click( function (){
+			$( "button#newnote" ).off("click").click( function (){
 				var name = $( "input#newnotename" ).val();
 				if( name != '' ){
 					makenew( name )
@@ -67,7 +67,7 @@ function list(){
 			});
 
 			//Archivbutton
-			$( "button#notesarchive" ).unbind("click").click( function (){
+			$( "button#notesarchive" ).off("click").click( function (){
 				//Manager fuer alte Notizen laden
 				oldNotesManager();
 			});
@@ -133,7 +133,7 @@ function list(){
 
 		//Listener
 		//	Open
-		$( "div.noteslist div.listpart div.list ul li span.notesnames" ).unbind('click').click(function(){
+		$( "div.noteslist div.listpart div.list ul li span.notesnames" ).off('click').click(function(){
 			var noteid = $( this ).parent().attr( "noteid" );
 			var name = $( this ).text();
 			//Notiz zeigen
@@ -147,7 +147,7 @@ function list(){
 		else{
 			$( "span.noteseditbuttons" ).removeClass("disable");
 			//	sotieren, delete (nur unsichtbar machen)
-			$( "span.noteseditbuttons button" ).unbind("click").click(function(){
+			$( "span.noteseditbuttons button" ).off("click").click(function(){
 				var art = $( this ).attr( "art" );
 				var noteid = $( this ).parent().parent().attr( "noteid" );
 				
