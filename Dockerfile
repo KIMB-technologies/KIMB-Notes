@@ -18,9 +18,6 @@ RUN rm /php-code/data/config.json /php-code/data/config.example.json \
 	} \n\
 	' > /etc/nginx/more-server-conf.conf
 
-# make system data persistent
-VOLUME /php-code/data/
-
 # tell the system that it runs in docker container
 ENV DOCKERMODE=true \
 	CONF_domain=http://localhost:8080 \
