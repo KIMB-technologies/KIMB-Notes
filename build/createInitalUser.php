@@ -68,6 +68,6 @@ if( !empty( $_ENV['USER_name'] ) && !empty( $_ENV['USER_password'] ) ){
 
 	unset($userlist);
 
-	exec('chown www-data:www-data /php-code/data/userlist.json /php-code/data/user/userslist.json');
+	exec('chown www-data:www-data /php-code/data/userlist.json* /php-code/data/user/userslist.json*');
 }
 ?>
