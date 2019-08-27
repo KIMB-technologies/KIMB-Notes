@@ -74,12 +74,27 @@ abstract class SystemInit{
 	//ConfFile einlesen
 	private static function readConfig(){
 		if( self::$readConfFile == false ){
-			$json = new JSONReader( 'config' );
+			// docker?
+			if( isset( $_ENV['DOCKERMODE'] ) && $_ENV['DOCKERMODE'] == 'true' ){
+				//read conf from $_ENV
+				self::$config = array(
+					'domain' => $_ENV['CONF_domain'],
+					'JSdevmin' => 'min',
+					'impressumURL' => $_ENV['CONF_impressum_url'],
+					'impressumName' => $_ENV['CONF_impressum_name'],
+					'showMarkdownInfo' => $_ENV['CONF_markdown_info'] == 'true',
+					'sysPoll' => intval($_ENV['CONF_syspoll']),
+					'AppCache' => true
+				);
+			}
+			else{
+				$json = new JSONReader( 'config' );
 
-			//Konfigurationsarray leer?
-			$cf = $json->getValue([], true);
-			if( !empty($cf) ){
-				self::$config = $cf;	
+				//Konfigurationsarray leer?
+				$cf = $json->getValue([], true);
+				if( !empty($cf) ){
+					self::$config = $cf;	
+				}
 			}
 
 			//fertig eingelesen

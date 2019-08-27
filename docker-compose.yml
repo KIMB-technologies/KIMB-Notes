@@ -1,0 +1,19 @@
+version: "2"
+
+services:
+  forms:
+    image: kimbtechnologies/kimb_notes:latest
+    container_name: notes
+    restart: always
+    ports:
+      - "8080:80"
+    volumes:
+      - ./data/:/php-code/data/ # save notes and accounts on host
+    environment:
+      - CONF_domain=http://localhost:8080
+      - CONF_impressum_url=http://example.com/imprint
+      - CONF_impressum_name=Imprint
+      - CONF_markdown_info=true
+      - CONF_syspoll=60
+      - USER_name=admin # create initial user (USER_* can be removed, after user was created on first startup)
+      - USER_password=password # define users password

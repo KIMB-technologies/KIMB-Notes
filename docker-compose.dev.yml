@@ -1,0 +1,20 @@
+# This docker-compose file is for development
+# Please see the other without .dev.
+
+version: "2"
+
+services:
+  notes:
+    container_name: notes_dev
+    build:
+      context: .
+    ports:
+      - "8080:80"
+    environment:
+      - CONF_domain=http://localhost:8080
+      - CONF_impressum_url=http://example.com/imprint
+      - CONF_impressum_name=Imprint
+      - CONF_markdown_info=true
+      - CONF_syspoll=60
+      - USER_name=admin # create initial user (USER_* can be removed, after user was created on first startup)
+      - USER_password=password # define users password
