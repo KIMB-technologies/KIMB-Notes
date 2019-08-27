@@ -1,7 +1,7 @@
 version: "2"
 
 services:
-  forms:
+  notes:
     image: kimbtechnologies/kimb_notes:latest
     container_name: notes
     restart: always
