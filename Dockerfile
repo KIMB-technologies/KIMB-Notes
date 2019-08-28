@@ -16,7 +16,9 @@ RUN rm /php-code/data/config.json /php-code/data/config.example.json \
 	location / { \n\
 		try_files $uri $uri/ =404; \n\
 	} \n\
-	' > /etc/nginx/more-server-conf.conf
+	' > /etc/nginx/more-server-conf.conf \
+	&& mkdir /data-dir-default/ \
+	&& cp -r /php-code/data/* /data-dir-default
 
 # tell the system that it runs in docker container
 ENV DOCKERMODE=true \

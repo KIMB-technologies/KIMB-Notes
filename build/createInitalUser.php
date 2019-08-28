@@ -4,8 +4,15 @@
  * erstellt User, falls nicht vorhanden,
  * schreibt immer das Passwort neu.
  * 
- * User ist immer ein Admin.
+ * Erstellt default Ordner im /data/ Verzeichnis, falls dieses leer ist.
+ * 
+ * Erstellter User ist immer ein Admin.
  */
+if( !is_dir( '/php-code/data/user' ) || !is_dir( '/php-code/data/notes' ) ){
+	exec( 'mv /data-dir-default/* /php-code/data/' );
+	exec('chown -R www-data:www-data /php-code/data/');
+}
+
 if( !empty( $_ENV['USER_name'] ) && !empty( $_ENV['USER_password'] ) ){
 	
 	// Daten extrahieren
