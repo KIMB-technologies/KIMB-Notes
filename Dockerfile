@@ -2,7 +2,7 @@ FROM kimbtechnologies/php_nginx:latest
 
 # copy sourcecode
 COPY --chown=www-data:www-data ./system/ /php-code/
-COPY ./build/createInitalUser.php /createInitalUser.php
+COPY ./build/createInitalUser.php ./build/startup-before.sh /
 
 # place config and translation outside, config done by env
 RUN rm /php-code/data/config.json /php-code/data/config.example.json \
@@ -27,5 +27,3 @@ ENV DOCKERMODE=true \
 	CONF_impressum_name=Impressum \
 	CONF_markdown_info=true \
 	CONF_syspoll=60
-
-CMD ["sh", "-c", "php /createInitalUser.php && sh /startup.sh"]

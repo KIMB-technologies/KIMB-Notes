@@ -1,10 +1,10 @@
 <?php
 /**
- * Skript zur Usererstellung im Docker container,
+ * Skript zur Usererstellung im Docker-Container,
  * erstellt User, falls nicht vorhanden,
  * schreibt immer das Passwort neu.
  * 
- * Erstellt default Ordner im /data/ Verzeichnis, falls dieses leer ist.
+ * Erstellt default Ordner im /data/ Verzeichnis, falls dieser leer ist.
  * 
  * Erstellter User ist immer ein Admin.
  */
