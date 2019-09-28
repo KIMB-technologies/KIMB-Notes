@@ -15,11 +15,4 @@ before_script:
 jobs:
   include:
     - stage: build docker image
-      script:
-      - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-      - docker build -t kimb_notes .
-      - docker images
-      - docker tag kimb_notes kimbtechnologies/kimb_notes:$TRAVIS_COMMIT
-      - docker tag kimb_notes kimbtechnologies/kimb_notes:latest
-      - docker push kimbtechnologies/kimb_notes:$TRAVIS_COMMIT
-      - docker push kimbtechnologies/kimb_notes:latest
+      script: bash ./dockerpublish.sh
