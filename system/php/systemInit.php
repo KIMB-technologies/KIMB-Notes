@@ -57,12 +57,16 @@ abstract class SystemInit{
 		//Polling mittels JS des Servers für Änderungen (Zeit in sec.)
 		'sysPoll' => 60,
 		//AppCache aktivieren?
-		'AppCache' => false
+		'AppCache' => false,
+		// Notes about cookies?
+		'cookienote' => false,
+		// more about cookies
+		'cookieurl' => 'https://example.com/what-is-a-cookie'
 	);
 
 	//Sytemversion
 	//	[ Hauptversionsnummer, Unternummer, Patch, Zusatz (Alpha, Beta, Final) ] => [1, 23, 5, 'B'] -> 1.23.5 Beta
-	const SYSTEMVERSION = [ 1, 1, 3, 'Beta' ];
+	const SYSTEMVERSION = [ 1, 1, 4, 'Final' ];
 
 	/*
 		Auslesen der Konfiguration
@@ -79,12 +83,14 @@ abstract class SystemInit{
 				//read conf from $_ENV
 				self::$config = array(
 					'domain' => $_ENV['CONF_domain'],
-					'JSdevmin' => 'min',
+					'JSdevmin' => isset($_ENV['DOCKER_dev']) ? 'dev' : 'min',
 					'impressumURL' => $_ENV['CONF_impressum_url'],
 					'impressumName' => $_ENV['CONF_impressum_name'],
 					'showMarkdownInfo' => $_ENV['CONF_markdown_info'] == 'true',
 					'sysPoll' => intval($_ENV['CONF_syspoll']),
-					'AppCache' => true
+					'AppCache' => !isset($_ENV['DOCKER_dev']),
+					'cookienote' => !empty($_ENV['CONF_cookieurl']),
+					'cookieurl' => isset($_ENV['CONF_cookieurl']) ? $_ENV['CONF_cookieurl'] : ''
 				);
 			}
 			else{

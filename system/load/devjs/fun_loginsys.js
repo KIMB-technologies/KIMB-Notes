@@ -5,6 +5,24 @@ function loginsys(){
 	//es ist JavaScript korrekt verfügbar!
 	$("div.nojs.error.message").remove();
 
+	//Cookies
+	if( $("input#usercookieok").length > 0 ){ // cookies ok?
+		if( localStorage.hasOwnProperty('cookie') && localStorage.getItem('cookie') == 'allowed' ){
+			$("input#usercookieok").prop('checked', true);
+		}
+
+		var cookie = $("input#usercookieok").prop('checked');
+		$("input#usercookieok").click( () => {
+			if( !cookie ){ // save that ok
+				localStorage.setItem('cookie', 'allowed');
+			}
+			else{
+				localStorage.removeItem('cookie');
+			}
+			window.location.reload();
+		});
+	}
+
 	//Freigbe prüfen
 	function check_share(){
 		//allgemeiner Ladebalken

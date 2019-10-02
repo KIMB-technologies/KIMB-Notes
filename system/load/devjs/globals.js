@@ -82,6 +82,19 @@ function ajax_request( task, post, callback, errcallback ){
 	}
 	else{
 		var filename = "ajax";
+		if( $("input#usercookieok").length > 0 ){ // cookies ok?
+			// not ok, no ajax!
+			if( !$("input#usercookieok").prop('checked') || !localStorage.hasOwnProperty('cookie') ){
+				//globale Fehlermeldung
+				errorMessage('Es wird das Recht benötigt, Cookies abzulegen!', false);
+
+				//Callback vorhanden?
+				if( typeof errcallback === "function" ){
+					errcallback();
+				}
+				return;	
+			}
+		}
 	}
 
 	$.post( domain + "/"+ filename +".php?" + task , post,

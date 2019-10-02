@@ -5,5 +5,7 @@
 	"impressumName": "Impressum &amp; Datenschutz",
 	"showMarkdownInfo" : true,
 	"sysPoll" : 60,
-	"AppCache" : true
+	"AppCache" : true,
+	"cookienote" : false,
+	"cookieurl" : "https://example.com/what-is-a-cookie"
 }

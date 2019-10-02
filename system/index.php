@@ -25,17 +25,8 @@
 define("Notestool", "OKAY");
 //	Type Header
 header('Content-Type: text/html; charset=utf-8');
-//	Session
-session_name( "Notestool" );
-session_start();
 //	Fehler aus
 error_reporting( 0 );
-
-/**
- * =============================================================
- * Webanalyse-Code <<HERE>>
- * =============================================================
- */
 
 //Systembibilothek laden
 require_once( __DIR__ . '/php/systemInit.php' );
@@ -98,13 +89,6 @@ $manifest = SystemInit::get( 'AppCache' ) ? ' manifest="'.$domain.'/appcache.php
 		<script src="<?php echo $domain; ?>/load/notes.<?php echo $jsdevmin; ?>.js"></script>
 	</head>
 	<body>
-<?php
-	/**
-	* =============================================================
-	* Banner-Code
-	* =============================================================
-	*/
-?>
 		<div class="main">
 			<h1>KIMB-Notes</h1>
 
@@ -134,6 +118,7 @@ $manifest = SystemInit::get( 'AppCache' ) ? ' manifest="'.$domain.'/appcache.php
 					<div id="loginform">
 						<input type="text" id="username" placeholder="Username"><br />
 						<input type="password" id="userpassword" placeholder="Password"><br />
+						<?php echo SystemInit::get( 'cookienote' ) ? '<p><input type="checkbox" id="usercookieok"> Ich akzeptiere die notwendigen Cookies, mehr dazu <a href="'. SystemInit::get( 'cookieurl' ) .'" target="_blank">hier</a>.</p>' : ''; ?>
 						<button id="userlogin">Login</button><br />
 					</div>
 				</div>

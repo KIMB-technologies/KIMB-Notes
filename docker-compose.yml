@@ -15,5 +15,6 @@ services:
       - CONF_impressum_name=Imprint
       - CONF_markdown_info=true
       - CONF_syspoll=60
+      - CONF_cookieurl= # url which tells about cookie usage, user will have to check a box on login
       - USER_name=admin # create initial user (USER_* can be removed, after user was created on first startup)
       - USER_password=password # define users password

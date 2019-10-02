@@ -10,11 +10,16 @@ services:
       context: .
     ports:
       - "8080:80"
+    volumes:
+      - ./system/:/php-code/
+      - ./data/:/php-code/data/
     environment:
+      - DOCKER_dev=yes
       - CONF_domain=http://localhost:8080
       - CONF_impressum_url=http://example.com/imprint
       - CONF_impressum_name=Imprint
       - CONF_markdown_info=true
       - CONF_syspoll=60
+      - CONF_cookieurl=http://example.com/cookie # url which tells about cookie usage, user will have to check a box on login
       - USER_name=admin # create initial user (USER_* can be removed, after user was created on first startup)
       - USER_password=password # define users password
