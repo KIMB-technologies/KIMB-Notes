@@ -9,9 +9,7 @@ function maker(noteid, notename, sharecont, savecallback, encrypted) {
 	if( typeof encrypted === "undefined" || encrypted !== true ){
 		encrypted = false;
 	}
-	if(encrypted){
-		$("button#publishnote").prop('disabled', true);
-	}
+	$("button#publishnote").prop('disabled', encrypted);
 
 	//	Erstelle zwei Variablen, die Zustand darstellen
 	if (typeof sharecont === "undefined") {
@@ -732,9 +730,16 @@ function maker(noteid, notename, sharecont, savecallback, encrypted) {
 						var key = $(this).attr('key');
 						var newtext = data.data[key]["text"];
 
+						if( encrypted ){
+							try {
+								newtext = systemEncrypter.decryptNote( newtext );
+							} catch (error) {
+								setTimeout( () => { errorMessage('Kann Verlauf nicht entschlüsseln!', 10); }, 200 );
+								return;
+							}
+						}
 						cm_editor.setValue(newtext);
 						$("div#historyManagerDialog").dialog("close");
-
 					});
 				}
 				else {
