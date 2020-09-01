@@ -82,11 +82,12 @@ echo $domain."/load/codemirror/clike.js"."\r\n";
 echo $domain."/load/codemirror/meta.js"."\r\n";
 echo $domain."/load/katex/katex.min.css"."\r\n";
 echo $domain."/load/katex/katex.min.js"."\r\n";
+/*	==> big filesize in cache, therefore don't force caching
 foreach( scandir( __DIR__ . '/load/katex/fonts/' ) as $fona ){
 	if( $fona != '.' && $fona != '..' && is_file( __DIR__ . '/load/katex/fonts/'. $fona ) ){
 		echo $domain."/load/katex/fonts/".$fona."\r\n";
 	}
-}
+}*/
 echo $domain."/load/prism/prism.css"."\r\n";
 echo $domain."/load/prism/prism.js"."\r\n";
 echo $domain."/load/notes.min.css"."\r\n";
