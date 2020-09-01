@@ -309,12 +309,15 @@ elseif(check_params( POST, array( 'userid' => 'strAZaz09', 'reload' => 'strAZaz0
 						}
 					}
 
+					$is_encrypted = substr($newNote->getValue(['content']), 0, 6) === '"{\"iv';
+
 					//neue Notiz dem User zuordnen
 					//	ganz oben
 					$activeNotesList->setValue( [null], array(
 						'name' => $newNote->getValue(['name']),
 						'noteid' => $noteid,
-						'position' => $pos + 1
+						'position' => $pos + 1,
+						'enc' => $is_encrypted
 					));
 				}
 				else{

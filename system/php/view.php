@@ -80,13 +80,16 @@ if( check_params( POST, array( 'userid' => 'strAZaz09', 'noteid' => 'strAZaz09',
 						//aktuelle Notiz
 						$now = $note->getValue(['content']);
 
+						$is_encrypted = substr($now, 0, 6) === '"{\"iv';
+
 						//Diffs in Array
 						$difflist = array();
+						$diffLimit = count($allHistory) - 15;
 						//erstellen
 						foreach( $allHistory as $key => $hist ){
 								
 							$difflist[] = array(
-								 'diff' => KIMBNotesGenerateDiff( $now, $hist[0] ),
+								 'diff' => $is_encrypted ? 'Kein Diff. bei verschlüsselten Notizen!' : ( $key < $diffLimit ? 'Kein Diff. für alte Versionen!' : KIMBNotesGenerateDiff( $now, $hist[0] ) ),
 								 'time' => $hist[1],
 								 'text' => $hist[0]
 							);
