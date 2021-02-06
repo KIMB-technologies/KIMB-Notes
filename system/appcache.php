@@ -57,6 +57,8 @@ echo $domain."/load/js-libs/sjcl.min.js"."\r\n";
 echo $domain."/load/js-libs/jquery.min.js"."\r\n";
 echo $domain."/load/js-libs/jquery-ui.min.js"."\r\n";
 echo $domain."/load/js-libs/jquery-ui.min.css"."\r\n";
+echo $domain."/load/js-libs/jquery-ui-light.theme.min.css"."\r\n";
+echo $domain."/load/js-libs/jquery-ui-dark.theme.min.css"."\r\n";
 foreach( scandir( __DIR__ . '/load/js-libs/images/' ) as $fona ){
 	if( $fona != '.' && $fona != '..' && is_file( __DIR__ . '/load/js-libs/images/'. $fona ) ){
 		echo $domain."/load/js-libs/images/".$fona."\r\n";
@@ -70,6 +72,7 @@ foreach( scandir( __DIR__ . '/load/js-libs/fonts/' ) as $fona ){
 }
 echo $domain."/load/marked.min.js"."\r\n";
 echo $domain."/load/codemirror/codemirror.css"."\r\n";
+echo $domain."/load/codemirror/dark-theme.css"."\r\n";
 echo $domain."/load/codemirror/codemirror.js"."\r\n";
 echo $domain."/load/codemirror/overlay.js"."\r\n";
 echo $domain."/load/codemirror/xml.js"."\r\n";
@@ -89,6 +92,7 @@ foreach( scandir( __DIR__ . '/load/katex/fonts/' ) as $fona ){
 	}
 }*/
 echo $domain."/load/prism/prism.css"."\r\n";
+echo $domain."/load/prism/dark-theme.css"."\r\n";
 echo $domain."/load/prism/prism.js"."\r\n";
 echo $domain."/load/notes.min.css"."\r\n";
 echo $domain."/load/notes.min.js"."\r\n";

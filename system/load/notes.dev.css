@@ -19,6 +19,44 @@
 // http://www.gnu.org/licenses/gpl-3.0.txt
 ************************************************/
 
+/* Colors */
+:root {
+	--input-bg-color: #fff;
+	--input-text-color: black;
+	--input-readonly-bg-color: #ddd;
+	--input-readonly-text-color:black;
+
+	--main-text-color: black;
+	--main-bg-color: white;
+	--main-link-color: blue;
+
+	--message-bg-color: #eee;
+	--box-bg-color: #eee;
+	--code-bg-color: #F8F8F8;
+
+	--as-app-color: #f5f5f5;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--input-bg-color: #444;
+		--input-text-color: white;
+		--input-readonly-bg-color: #666;
+		--input-readonly-text-color:white;
+
+		--main-text-color: #eee;
+		--main-bg-color: #333;
+		--main-link-color: lightblue;
+
+		--message-bg-color: #444;
+		--box-bg-color: #555;
+		--code-bg-color: #494949;
+
+		--as-app-color: #181818;
+	}
+}
+    
+
 /* HTML Grundelemente Design */
 body,input,textarea,button,pre,code{
 	font-size:100%;
@@ -26,9 +64,15 @@ body,input,textarea,button,pre,code{
 body,input,textarea,button{
 	font-family:Ubuntu, sans-serif;
 }
+input,textarea,button{
+	background-color: var(--input-bg-color);
+	color: var(--input-text-color);
+	border-radius: 4px;
+}
 input[readonly=readonly]{
-	background-color:#ddd;
+	background-color: var(--input-readonly-bg-color);
 	border-radius:3px;
+	color: var(--input-readonly-text-color);
 }
 pre,code{
 	font-family:"Ubuntu Mono", monospace;
@@ -37,7 +81,7 @@ pre,code{
 body{
 	background:url( "notes_bg_sw.png" ) repeat scroll center top #010101;
 	background-color: #010101;
-	color: black;
+	color: var(--main-text-color);
 }
 
 h1,h2{
@@ -54,7 +98,7 @@ h2{
 
 a, a:hover, a:active, a:visited{
 	text-decoration:none;
-	color:blue;
+	color:var(--main-link-color);
 }
 
 blockquote{
@@ -65,7 +109,7 @@ blockquote{
 }
 code,pre{
 	border-radius: 3px;
-	background-color: #F8F8F8;
+	background-color: var(--code-bg-color);
 	color: inherit;
 }
 code{
@@ -119,7 +163,7 @@ del {
 	text-align:center;
 	border:2px solid #5d7;
 	border-radius: 5px;
-	background-color:#eee;
+	background-color:var(--message-bg-color);
 	padding:5px;
 	margin:5px;
 }
@@ -127,7 +171,7 @@ del {
 	margin:auto;
 	border:2px solid #aaa;
 	border-radius: 5px;
-	background-color:#eee;
+	background-color:var(--box-bg-color);
 	padding:5px;
 	margin:5px;
 }
@@ -141,7 +185,7 @@ div.main{
 	margin:auto;
 	max-width: 1100px;
 	min-width: 300px;
-	background-color:white;
+	background-color:var(--main-bg-color);
 	padding:10px;
 	border-radius:15px;
 	border:1px solid #5d7;

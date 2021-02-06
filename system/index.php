@@ -56,7 +56,9 @@ $manifest = SystemInit::get( 'AppCache' ) ? ' manifest="'.$domain.'/appcache.php
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 
 		<link rel="stylesheet" type="text/css" href="<?php echo $domain; ?>/load/js-libs/fonts.css">
-		<link rel="stylesheet" type="text/css" href="<?php echo $domain; ?>/load/js-libs/jquery-ui.min.css">		
+		<link rel="stylesheet" type="text/css" href="<?php echo $domain; ?>/load/js-libs/jquery-ui.min.css">
+		<link rel="stylesheet" type="text/css" href="<?php echo $domain; ?>/load/js-libs/jquery-ui-light.theme.min.css" media="screen and (prefers-color-scheme: light)"> 
+		<link rel="stylesheet" type="text/css" href="<?php echo $domain; ?>/load/js-libs/jquery-ui-dark.theme.min.css" media="screen and (prefers-color-scheme: dark)">
 
 		<script src="<?php echo $domain; ?>/load/js-libs/jquery.min.js"></script>
 		<script src="<?php echo $domain; ?>/load/js-libs/jquery-ui.min.js"></script>
@@ -75,11 +77,13 @@ $manifest = SystemInit::get( 'AppCache' ) ? ' manifest="'.$domain.'/appcache.php
 		<script src="<?php echo $domain; ?>/load/codemirror/htmlmixed.js"></script>
 		<script src="<?php echo $domain; ?>/load/codemirror/clike.js"></script>
 		<script src="<?php echo $domain; ?>/load/codemirror/meta.js"></script>
+		<link rel="stylesheet" type="text/css" href="<?php echo $domain; ?>/load/codemirror/dark-theme.css" media="screen and (prefers-color-scheme: dark)">
 
 		<link rel="stylesheet" href="<?php echo $domain; ?>/load/katex/katex.min.css">
 		<script src="<?php echo $domain; ?>/load/katex/katex.min.js"></script>
 
 		<link rel="stylesheet" href="<?php echo $domain; ?>/load/prism/prism.css">
+		<link rel="stylesheet" type="text/css" href="<?php echo $domain; ?>/load/prism/dark-theme.css" media="screen and (prefers-color-scheme: dark)">
 		<script src="<?php echo $domain; ?>/load/prism/prism.js"></script>
 
 		<link rel="stylesheet" href="<?php echo $domain; ?>/load/fa/fontawesome.min.css">

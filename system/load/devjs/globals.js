@@ -215,7 +215,7 @@ function confirmDialog(cont, buttons, title){
 let isOpenedAsApp = ((("standalone" in window.navigator) && window.navigator.standalone == true) || (window.matchMedia('(display-mode: standalone)').matches));
 function displayAsApp(){
 	$('body').css({
-		background: '#f5f5f5'
+		background: 'var(--as-app-color)'
 	});
 	$('div.main').css({
 		border: 'none',
