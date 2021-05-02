@@ -1,4 +1,5 @@
 <?php
+// @phan-file-suppress PhanUndeclaredProperty 
 
 defined("Notestool") or die('No clean Request');
 

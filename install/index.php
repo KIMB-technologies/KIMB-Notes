@@ -47,7 +47,7 @@ class Output{
 	}
 
 	public function __destruct(){
-		$boxes = implode ( $this->boxes, "\r\n\r\n\r\n" );
+		$boxes = implode( "\r\n\r\n\r\n", $this->boxes);
 		echo str_replace( '<<<--BOXES-->>>', $boxes, $this->templatehtml );
 	}
 }

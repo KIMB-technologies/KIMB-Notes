@@ -422,7 +422,7 @@ function makepassw( $laenge, $typ = 0 ){
 	$output = '';
 	while($i < $laenge){
 		$stelle = random_int(0, $anzahl-1);
-		$output .= $chars{$stelle};
+		$output .= $chars[$stelle];
 		$i++;
 	}
 	return $output;

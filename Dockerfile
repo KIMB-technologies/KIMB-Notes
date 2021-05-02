@@ -1,4 +1,4 @@
-FROM kimbtechnologies/php_nginx:latest
+FROM kimbtechnologies/php_nginx:8-latest
 
 # copy sourcecode
 COPY --chown=www-data:www-data ./system/ /php-code/

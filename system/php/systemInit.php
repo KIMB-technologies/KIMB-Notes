@@ -66,7 +66,7 @@ abstract class SystemInit{
 
 	//Sytemversion
 	//	[ Hauptversionsnummer, Unternummer, Patch, Zusatz (Alpha, Beta, Final) ] => [1, 23, 5, 'B'] -> 1.23.5 Beta
-	const SYSTEMVERSION = [ 1, 1, 9, 'Final' ];
+	const SYSTEMVERSION = [ 1, 1, 10, 'Final' ];
 
 	/*
 		Auslesen der Konfiguration
@@ -90,7 +90,7 @@ abstract class SystemInit{
 					'sysPoll' => intval($_ENV['CONF_syspoll']),
 					'AppCache' => !isset($_ENV['DOCKER_dev']),
 					'cookienote' => !empty($_ENV['CONF_cookieurl']),
-					'cookieurl' => isset($_ENV['CONF_cookieurl']) ? $_ENV['CONF_cookieurl'] : ''
+					'cookieurl' => $_ENV['CONF_cookieurl'] ?? ''
 				);
 			}
 			else{
